@@ -1,0 +1,51 @@
+spring:
+    thymeleaf:
+        prefix: classpath:/templates/
+        cache: false
+        mode: LEGACYHTML5
+    http:
+        multipart:
+            enabled: true #默认支持文件上传.
+            file-size-threshold: 0 #支持文件写入磁盘.
+            location: # 上传文件的临时目录
+            maxFileSize: 10240Mb# 最大支持文件大小
+            maxRequestSize: 102400Mb 最大支持请求大小
+    datasource:
+        name: druidDataSource
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+            driver-class-name: oracle.jdbc.driver.OracleDriver
+            url: jdbc:oracle:thin:@192.168.182.128:1521:XE
+            username: devenc
+            password: devenc
+            filters: stat
+            max-active: 100
+            initial-size: 1
+            max-wait: 60000
+            min-idle: 1
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            pool-prepared-statements: true
+            max-open-prepared-statements: 50
+            max-pool-prepared-statement-per-connection-size: 20
+
+server:
+    tomcat:
+        basedir: logistics/tomcat
+
+
+#XML文件位置 指定DAO与SQL语句关联
+
+logging:
+    level:
+        com.threefivework.mymall.dao.mapper: DEBUG
+# Mybatis config
+mybatis:
+    configuration:
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl 
+    mapper-locations: classpath:/mapper/*.xml
+    type-aliases-package: previewoffice.vo
+        

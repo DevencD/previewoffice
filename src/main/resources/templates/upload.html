@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>文件列表</title>
+</head>
+<style>
+table {
+    margin:auto;
+    width: 60%;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+ 
+table caption {
+    color: blue;
+    font: 34px consolas bold;
+}
+ 
+table th, table td {
+    border: 1px solid black;
+    text-align:center;
+}
+ 
+table th {
+    font: 20px consolas bold;
+    background-color: gray;
+}
+ 
+table tr:nth-child(n+2){
+    background-color: cyan;
+}
+ 
+table tr:nth-child(2n+2)  {
+    background-color: white;
+}
+</style>
+<body onload="init()">
+	<script src="templates/jquery.js"></script>
+	<script type="text/javascript">
+		var filePerSize = 0;
+		function previewFile() {
+			//获取显示图片对象
+			var preview = document.getElementById("showImg"); // 通过元素节点查找： document.querySelector('img');
+			//获取选中图片对象（包含文件的名称、大小、类型等，如file.size）
+			var file = document.getElementById("chkFile").files[0]; //document.querySelector('input[type=file]').files[0];
+			var fileName = file.name;
+
+			//声明js的文件流
+			var reader = new FileReader();
+			if (file) {
+				//通过文件流将文件转换成Base64字符串
+				reader.readAsDataURL(file, "UTF-8");
+				//转换成功后
+				reader.onloadend = function() {
+					//将转换结果赋值给img标签
+					//preview.src = reader.result;
+
+					var fileContent = reader.result;
+					var target = location.origin + "/uploadFile/transfer";
+					fileContent = fileContent.substring(fileContent
+							.indexOf(",") + 1, fileContent.length);
+					var length = fileContent.length;
+
+					var times = Math.ceil(length / filePerSize);
+					var fileID = "";
+					$.ajax({
+						type : "GET",
+						url : location.origin
+								+ "/uploadFile/transfer/getFileId",
+						contentType : "application/json",
+						dataType : "json",
+						data : {
+							fileName : fileName
+						},
+						success : function(data) {
+							fileID = data.fileId;
+						},
+						error : function() {
+							alert("error");
+						},
+						complete : function() {
+						}
+					});
+					setTimeout(
+							function() {
+								for (var i = 0; i < times; i++) {
+									var data = {};
+									data.fileSeria = i + 1;
+									data.fileID = fileID;
+									data.fileContentPart = fileContent
+											.substring(i * filePerSize, (i + 1) * filePerSize);
+									data.fileComplete = false;
+									if ((times - 1) == i) {
+										data.fileComplete = true;
+									}
+									$
+											.ajax({
+												type : "GET",
+												url : target,
+												contentType : "application/json",
+												dataType : "json",
+												data : data,
+												success : function(result) {
+													if (result.fileComplete == "true") {
+														//输出结果    
+														document
+																.getElementById("showText").value = data.filePath;
+														assembleTable();
+													}
+												}
+											});
+								}
+							}, 5000);
+				}
+			}
+		}
+		
+		function init(){
+			//获取每个文件的大小filePerSize
+			$
+			.ajax({
+				type : "GET",
+				url : location.origin + "/getValueByKey",
+				contentType : "application/json",
+				dataType : "json",
+				data : {key:"filePerSize"},
+				success : function(data) {
+					filePerSize = data.value
+				}
+			});
+			assembleTable();
+		}
+		
+		function assembleTable(){
+			$
+			.ajax({
+				type : "GET",
+				url : location.origin + "/uploadFile/getAttList",
+				contentType : "application/json",
+				dataType : "json",
+				success : function(data) {
+					var File = function (id, fileName, fileSeriaLength, filePath,fileCreateTime,fileCompleteTime)
+					{
+					    this.id = id;
+					    this.fileName = fileName;
+					    this.fileSeriaLength = fileSeriaLength;
+					    this.filePath = filePath;
+					    this.fileCreateTime = fileCreateTime;
+					    this.fileCompleteTime = fileCompleteTime;
+					}
+					var files = data.result;
+					var downloadUrl = location.origin + "/uploadFile/download?fileId="; 
+					var table = "<table>";
+					table += "<caption>文件列表</caption>";
+					table += "<tbody>";
+					//添加表头
+					var str = "ID,文件名,文件路径,文件序列号长度,文件创建时间,文件完成时间,操作".split(",");
+					table += "<tr>";
+					for(var i = 0,size=str.length;i < size;i++){
+						if(i == 0){
+							table += "<th style='display: none'>" + str[i] + "</th>";
+						}else{
+							table += "<th>" + str[i] + "</th>";
+						}
+					}
+					table += "</tr>";
+					for(var i=0,size=files.length;i<size;i++){
+						table += "<tr>";
+						var obj = files[i];
+						var id = "";
+						for(var p in obj){
+							var op = obj[p];
+							if(p=='id'){
+								table += "<td style='display: none'>";
+								id = op;
+							}else{
+								table += "<td>";
+							}
+							table += op;
+							table += "</td>";
+						}
+						//<a href="javasctipt:void(0);" onclick="xxx.html?userid=zhangsan">
+						table += "<td>" + 
+						"<a href='javasctipt:void(0)' onclick='window.download(\"" + id + "\")'>下载</a>";
+						table += "<a href='javasctipt:void(0)' onclick='window.deleteFile(\"" + id + "\")'>下载</a>";
+						table +=  "</td>";
+						table += "</tr>";
+					}
+					table += "</tbody></table>";
+					document.getElementById("div1").style.display = "block";
+					document.getElementById("table1").innerHTML = table;
+					window.download = function(id){
+						var toUrl = downloadUrl + id;
+			            window.open(toUrl);
+					};
+					window.deleteFile = function(id){
+						
+					};
+				}
+			}); 
+		}
+		
+		
+
+		function getStringFromFile(e) {
+			//获取文件
+			var file = e.target.files[0];
+
+			/*
+			 * 使用FileReader对象将文件转换为Base64字符串
+			 */
+			var reader = new FileReader();
+			reader.readAsDataURL(this.file, "UTF-8");
+			reader.οnlοad = function() {
+				fileStringBase64 = this.result;
+				fileStringBase64 = fileStringBase64.substring(fileStringBase64
+						.indexOf(",") + 1, fileStringBase64.length);
+			}
+		}
+
+		function previewFile11() {
+			//获取显示图片对象
+			var preview = document.getElementById("showImg"); // 通过元素节点查找： document.querySelector('img');
+			//获取选中图片对象（包含文件的名称、大小、类型等，如file.size）
+			var file = document.getElementById("chkFile").files[0]; //document.querySelector('input[type=file]').files[0];
+			var fileName = file.name;
+
+			//声明js的文件流
+			var reader = new FileReader();
+
+			//通过文件流将文件转换成Base64字符串
+			reader.readAsDataURL(file, "UTF-8");
+			//转换成功后
+			reader.onloadend = function() {
+				//将转换结果赋值给img标签
+				preview.src = reader.result;
+				//输出结果    
+				console.log(reader.result);
+				document.getElementById("showText").value = reader.result;
+				var fileContent = reader.result;
+				fileContent = fileContent.substring(
+						fileContent.indexOf(",") + 1, fileContent.length);
+				var target = location.origin + "/uploadFile/transfer?fileName="
+						+ window.btoa(window.encodeURIComponent(fileName));
+
+				var http_request = false;
+				http_request = new XMLHttpRequest();
+				if (http_request.overrideMimeType) {
+					http_request.overrideMimeType('text/xml');
+				}
+				http_request.onreadystatechange = function() {
+					if (http_request.readyState == 4) {
+						if (http_request.status == 200) {
+							alert(1111);
+						} else {
+							alert("请求出现问题，状态码：" + http_request.status);
+						}
+					}
+				};
+				http_request.open("POST", target, true);
+				http_request.setRequestHeader('Content-Type',
+						'text/plain;charset=utf-8');
+				http_request.send(fileContent);
+
+			}
+		}
+	</script>
+
+	<h2>选择文件：</h2>
+	<input id="chkFile" type="file" onchange="previewFile()" />
+	<br />
+	<h2>文件位置：</h2>
+	<input id="showText" style="width: 65%; height: 30px;" />
+	<br />
+	<div id="div1" style="display: none">    
+      <div id="table1"></div>        
+  </div> 
+</body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 映射文件，映射到对应的SQL接口 -->
+<mapper namespace="previewoffice.mapper.IAttachmentMapper">
+	
+	<!-- 查询数据 -->
+	<!-- 入参定义：在接口定义中使用@Param注解(单参/多参都可使用) -->
+	<!-- 语句末尾不能有分号：ORA-00911: invalid character -->
+
+    <resultMap id="Attachment" type="previewoffice.vo.AttachmentVO">
+        <id property="id" column="ID"/>
+        <result property="fileName" column="file_name"/>
+        <result property="fileSeriaLength" column="file_seria_length"/>
+        <result property="filePath" column="file_path"/>
+        <result property="fileCreateTime" column="file_create_time"/>
+        <result property="fileCompleteTime" column="file_complete_time"/>
+    </resultMap>
+	<!-- 
+    <select id="getDDByKey" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+        select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where KEY = #{DDkey}
+    </select>
+    
+    <select id="getDDByID" parameterType="int"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+        select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where ID = #{id}
+    </select>
+    
+ 	<select id="getDDValueByKey" parameterType="string"  resultType="string">
+        select VALUE from T_DataDictionary where KEY = #{DDkey}
+    </select> -->
+    <select id="queryAll" resultType="previewoffice.vo.AttachmentVO" resultMap="Attachment">
+    	select * from T_Attachment order by file_create_time
+    </select>
+    
+    <insert id="createAttachment" parameterType="previewoffice.vo.AttachmentVO">
+    	insert into T_Attachment (id,file_name,file_create_time) values(#{id},#{fileName},sysdate)
+    </insert>
+    
+    <update id="updateComplete">
+    	update T_Attachment set file_seria_length = #{fileSeriaLength,jdbcType=INTEGER},file_path=#{filePath,jdbcType=VARCHAR},file_complete_time=sysdate where id = #{fileID,jdbcType=VARCHAR}
+    </update>
+    
+    <select id="getFileNameById" parameterType="string" resultType="string">
+    	select file_name as fileName from T_Attachment where id = #{id}
+    </select>
+    
+    <select id="getFileById" parameterType="string" resultType="previewoffice.vo.AttachmentVO" resultMap="Attachment">
+    	select * from T_Attachment where id = #{id}
+    </select>
+</mapper>

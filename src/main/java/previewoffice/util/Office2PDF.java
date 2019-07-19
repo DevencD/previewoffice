@@ -2,6 +2,7 @@ package previewoffice.util;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry;
@@ -15,6 +16,9 @@ public class Office2PDF
 {
     
     private static OpenOfficeConnection officeConnection;
+    
+    private static String openofficeIP;
+    private static int openofficePort;
 
     /**
      * 使Office2003-2007全部格式的文档(.doc|.docx|.xls|.xlsx|.ppt|.pptx) 转化为pdf文件<br>
@@ -25,8 +29,8 @@ public class Office2PDF
      *            目标文件路径，如："e:/test_docx.pdf"
      * @return
      */
-    public static boolean openOfficeToPDF(String inputFilePath, String outputFilePath) {
-        return office2pdf(inputFilePath, outputFilePath);
+    public static boolean openOfficeToPDF(Map<String,String> config,String inputFilePath, String outputFilePath) {
+        return office2pdf(config,inputFilePath, outputFilePath);
     }
  
     /**
@@ -62,7 +66,7 @@ public class Office2PDF
         // OfficeManager officeManager = config.buildOfficeManager();
         // officeManager.start();
         if(null == officeConnection) {
-            officeConnection = new SocketOpenOfficeConnection();
+            officeConnection = new SocketOpenOfficeConnection(openofficeIP,openofficePort);
         }
         return officeConnection;
     }
@@ -100,9 +104,10 @@ public class Office2PDF
      *            目标文件路径，如："e:/test_docx.pdf"
      * @return
      */
-    public static boolean office2pdf(String inputFilePath, String outputFilePath) {
+    public static boolean office2pdf(Map<String,String> config,String inputFilePath, String outputFilePath) {
         boolean flag = false;
-
+        openofficeIP = config.get("openofficeIP");
+        openofficePort = Integer.parseInt(config.get("openofficePort"));
         OpenOfficeConnection officeConnection = getOfficeConnection();
         // 连接OpenOffice
         OpenOfficeDocumentConverter converter = new OpenOfficeDocumentConverter(officeConnection);
@@ -159,5 +164,16 @@ public class Office2PDF
 //        openOfficeToPDF("F:\\download_薪酬发放表附带页眉页脚打印模板（A3纸）_20181127.xlsx", "F:\\download_薪酬发放表附带页眉页脚打印模板（A3纸）_20181127.pdf");
 ////        openOfficeToPDF("F:\\会计核算软件数据接口(行政事业单位).doc", "F:\\会计核算软件数据接口(行政事业单位).pdf");
 //       
+//    }
+    
+//    public static void main(String[] args)
+//    {
+//        BigDecimal basePay = new BigDecimal("7500");
+//        BigDecimal maxPay = new BigDecimal("0");
+//        if(maxPay != null && basePay.compareTo(maxPay)<0) {
+//            basePay = maxPay;
+//        }
+//        System.out.println(basePay);
+//        openOfficeToPDF("F:\\excel\\download_薪酬发放表打印模板（A4纸）_20190220.xls", "F:\\excel\\download_薪酬发放表打印模板（A4纸）_20190220.pdf");
 //    }
 }

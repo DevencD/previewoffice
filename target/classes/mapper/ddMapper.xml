@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 映射文件，映射到对应的SQL接口 -->
+<mapper namespace="previewoffice.mapper.IDataDictionaryMapper">
+	
+	<!-- 查询数据 -->
+	<!-- 入参定义：在接口定义中使用@Param注解(单参/多参都可使用) -->
+	<!-- 语句末尾不能有分号：ORA-00911: invalid character -->
+
+    <resultMap id="DDVO" type="previewoffice.vo.DataDictionaryVO">
+        <id property="id" column="ID"/>
+        <result property="key" column="KEY"/>
+        <result property="value" column="VALUE"/>
+        <result property="description" column="DESCRIPTION"/>
+    </resultMap>
+
+    <select id="getDDByKey" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+        select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where KEY = #{DDkey}
+    </select>
+    
+    <select id="getDDByID" parameterType="int"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+        select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where ID = #{id}
+    </select>
+    
+ 	<select id="getDDValueByKey" parameterType="string"  resultType="string">
+        select VALUE from T_DataDictionary where KEY = #{DDkey}
+    </select>
+</mapper>

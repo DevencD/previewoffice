@@ -1,2 +1,67 @@
 Apache_OpenOffice_4.1.6
 soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard &
+
+
+
+create table T_DataDictionary
+(
+id int primary key,
+key varchar(255),
+value varchar(255),
+description varchar(255)
+);
+
+select t.key,t.value from T_DataDictionary t where t.key;
+insert into T_DataDictionary(id,key,value,description)values(2,'openofficeIP','192.168.182.128',null)
+insert into T_DataDictionary(id,key,value,description)values(3,'openofficePort','8100',null);
+insert into T_DataDictionary(id,key,value,description)values(4,'filePerSize','1000',null)
+
+select t.id,t.key,t.value,t.description from T_DataDictionary t where t.key = 'key'
+
+select * from T_DataDictionary
+
+drop table  T_DataDictionary
+
+select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where KEY = 'openofficeIP' 
+select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where ID = 2
+
+
+
+select value from T_DataDictionary where KEY = 'openofficeIP'
+
+update T_DataDictionary set value = '127.0.0.1' where id = 2
+commit;
+
+create table T_DataDictionary
+(
+id int primary key,
+key varchar(255),
+value varchar(255),
+description varchar(255)
+);
+
+
+
+create table T_Attachment
+(
+id varchar(60) primary key,
+file_name varchar(255),
+file_seria_length int,
+file_path varchar(255),
+file_create_time timestamp,
+file_complete_time timestamp 
+);
+create table T_Attachment_part
+(
+ id varchar(60) primary key,
+ file_id varchar(60),
+ file_seria int,
+ file_content_part nclob,
+ file_create_time timestamp
+);
+drop table T_Attachment
+select * from T_Attachment_part where file_id = '' order by file_seria
+select sysdate  from dual
+select* from T_Attachment order by file_create_time
+delete from T_Attachment;
+delete from T_Attachment_part;

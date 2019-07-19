@@ -160,6 +160,7 @@ public class POIReadExcel
  
         //读取excel拼装html
         int lastRowNum = sheet.getLastRowNum();
+        int size = sheet.getPhysicalNumberOfRows();
         map = getRowSpanColSpanMap(sheet);
         double page = Math.ceil((float)lastRowNum / (float)rowsPerPage);
         int mod = lastRowNum % rowsPerPage;

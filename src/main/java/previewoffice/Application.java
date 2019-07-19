@@ -2,24 +2,28 @@ package previewoffice;
 
 import javax.servlet.MultipartConfigElement;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@EnableAutoConfiguration
-@ComponentScan(basePackages = {"previewoffice"})
+@SpringBootApplication
 @Configuration
+@MapperScan("previewoffice.mapper")
+@ComponentScan("previewoffice")
 public class Application
 {
+    
 
     public static void main(String[] args)
     {
         SpringApplication.run(Application.class, args);
 
     }
+   
     
     @Bean
     public MultipartConfigElement multipartConfigElement() {
