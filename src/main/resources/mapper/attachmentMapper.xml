@@ -28,7 +28,7 @@
         select VALUE from T_DataDictionary where KEY = #{DDkey}
     </select> -->
     <select id="queryAll" resultType="previewoffice.vo.AttachmentVO" resultMap="Attachment">
-    	select * from T_Attachment order by file_create_time
+    	select * from T_Attachment order by file_create_time desc
     </select>
     
     <insert id="createAttachment" parameterType="previewoffice.vo.AttachmentVO">
@@ -46,4 +46,8 @@
     <select id="getFileById" parameterType="string" resultType="previewoffice.vo.AttachmentVO" resultMap="Attachment">
     	select * from T_Attachment where id = #{id}
     </select>
+    
+    <delete id="deleteAttachmentById" parameterType="string" >
+    	delete from T_Attachment where id = #{id}
+    </delete>
 </mapper>

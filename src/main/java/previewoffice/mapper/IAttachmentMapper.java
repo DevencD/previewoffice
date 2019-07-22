@@ -22,4 +22,5 @@ public interface IAttachmentMapper
     
     AttachmentVO getFileById(@Param("id")String fileID);
 
+    void deleteAttachmentById(@Param("id")String fileID);
 }

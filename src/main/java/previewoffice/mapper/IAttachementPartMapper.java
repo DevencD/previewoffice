@@ -15,5 +15,7 @@ public interface IAttachementPartMapper
     void createAttachmentPart(@Param("attachmentPart")AttachmentPartVO attachmentPart);
     
     List<AttachmentPartVO> getAttachementByFileID(@Param("fileID")String fileID);
+    
+    void deleteAttachmentPartByFileId(@Param("fileID")String fileID);
 
 }

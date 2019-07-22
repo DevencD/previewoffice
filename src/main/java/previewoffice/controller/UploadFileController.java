@@ -50,6 +50,22 @@ public class UploadFileController {
         return result;
     }
     
+    @GetMapping("/deleteAtt")
+    public String deleteAttachment(HttpServletRequest httpServletRequest) {
+        String fileId = httpServletRequest.getParameter("fileId");
+        AttachmentVO attachment = attachmentDao.getFileById(fileId);
+        String filePath = attachment.getFilePath();
+        if(!StringUtils.isEmpty(filePath)) {
+            File file = new File(filePath);
+            if(file.exists()) {
+                file.delete();
+            }
+        }
+        attachmentDao.deleteAttachmentById(fileId);
+        attachmentPartDao.deleteAttachmentPartByFileId(fileId);
+        return null;
+    }
+    
     @GetMapping("/download")
     public String downloadAttachment(HttpServletRequest httpServletRequest,HttpServletResponse response) throws UnsupportedEncodingException{
         String fileId = httpServletRequest.getParameter("fileId");

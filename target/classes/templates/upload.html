@@ -105,7 +105,7 @@ table tr:nth-child(2n+2)  {
 													if (result.fileComplete == "true") {
 														//输出结果    
 														document
-																.getElementById("showText").value = data.filePath;
+																.getElementById("showText").value = result.filePath;
 														assembleTable();
 													}
 												}
@@ -155,7 +155,7 @@ table tr:nth-child(2n+2)  {
 					table += "<caption>文件列表</caption>";
 					table += "<tbody>";
 					//添加表头
-					var str = "ID,文件名,文件路径,文件序列号长度,文件创建时间,文件完成时间,操作".split(",");
+					var str = "ID,文件名,文件序列号长度,文件路径,文件创建时间,文件完成时间,操作".split(",");
 					table += "<tr>";
 					for(var i = 0,size=str.length;i < size;i++){
 						if(i == 0){
@@ -177,13 +177,18 @@ table tr:nth-child(2n+2)  {
 							}else{
 								table += "<td>";
 							}
-							table += op;
+							if(p=='fileCreateTime'||p=='fileCompleteTime'){
+								table += new Date(op).toLocaleString().replace(/:\d{1,2}$/,' ');
+							}else{
+								table += op;
+							}
 							table += "</td>";
 						}
 						//<a href="javasctipt:void(0);" onclick="xxx.html?userid=zhangsan">
 						table += "<td>" + 
 						"<a href='javasctipt:void(0)' onclick='window.download(\"" + id + "\")'>下载</a>";
-						table += "<a href='javasctipt:void(0)' onclick='window.deleteFile(\"" + id + "\")'>下载</a>";
+						table += "<br/>";
+						table += "<a href='javasctipt:void(0)' onclick='window.deleteFile(\"" + id + "\")'>删除</a>";
 						table +=  "</td>";
 						table += "</tr>";
 					}
@@ -195,7 +200,18 @@ table tr:nth-child(2n+2)  {
 			            window.open(toUrl);
 					};
 					window.deleteFile = function(id){
-						
+						$
+						.ajax({
+							type : "GET",
+							url : location.origin + "/uploadFile/deleteAtt",
+							contentType : "application/json",
+							dataType : "json",
+							data : {fileId:id},
+							success : function(data) {
+								alert("删除文件成功");
+								assembleTable();
+							}
+						});
 					};
 				}
 			}); 
