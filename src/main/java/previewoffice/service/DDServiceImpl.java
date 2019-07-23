@@ -1,5 +1,6 @@
 package previewoffice.service;
 
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,32 +17,39 @@ import previewoffice.mapper.IDataDictionaryMapper;
 import previewoffice.util.ProjectConstant;
 import previewoffice.vo.DataDictionaryVO;
 
+
 @Service
 public class DDServiceImpl implements IDDService
 {
     @Autowired
     private DataSource dataSouce;
-    
+
     @Autowired
     private Environment enviroment;
-    
+
     @Autowired
     private IDataDictionaryMapper ddDao;
-    
+
     @Override
     public DataDictionaryVO getDDVOByKey(String key)
     {
         return ddDao.getDDByKey(key);
     }
-    
-    private ResultSet getResultSet(String sql) throws ClassNotFoundException, SQLException {
-        return  getStatement().executeQuery(sql);
+
+    private ResultSet getResultSet(String sql)
+        throws ClassNotFoundException,
+        SQLException
+    {
+        return getStatement().executeQuery(sql);
     }
-    
-    private Statement getStatement() throws ClassNotFoundException, SQLException {
+
+    private Statement getStatement()
+        throws ClassNotFoundException,
+        SQLException
+    {
         return getConnection().createStatement();
     }
-    
+
     private Connection getConnection()
         throws ClassNotFoundException,
         SQLException
@@ -61,11 +69,12 @@ public class DDServiceImpl implements IDDService
     {
         return ddDao.getDDValueByKey(key);
     }
-    
+
     @Override
     public String createDD(DataDictionaryVO dataDictionaryVO)
     {
-        String ddID = UUID.randomUUID().toString().replace("-", "") + ProjectConstant.DATADICTIONARTID_SUFFIX;
+        String ddID = UUID.randomUUID().toString().replace("-", "")
+                      + ProjectConstant.DATADICTIONARTID_SUFFIX;
         dataDictionaryVO.setId(ddID);
         ddDao.createDD(dataDictionaryVO);
         return ddID;

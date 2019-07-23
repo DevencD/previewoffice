@@ -23,7 +23,8 @@
 						table += "<caption>数据字典列表</br><input type='button' value='新 增'  onclick='addDD()'/></caption>";
 						table += "<tbody>";
 						//添加表头
-						var str = "ID,Key,Value,Description,操      作".split(",");
+						var str = "ID,Key,Value,Description,操      作"
+								.split(",");
 						table += "<tr>";
 						for (var i = 0, size = str.length; i < size; i++) {
 							if (i == 0) {
@@ -37,7 +38,7 @@
 						for (var i = 0, size = files.length; i < size; i++) {
 							table += "<tr>";
 							var obj = files[i];
-							var id = "",key="",value="",description="";
+							var id = "", key = "", value = "", description = "";
 							for ( var p in obj) {
 								var op = obj[p];
 								if (p == 'id') {
@@ -46,11 +47,11 @@
 								} else {
 									table += "<td>";
 								}
-								if(p =='key'){
+								if (p == 'key') {
 									key = op;
-								}else if(p == 'value'){
+								} else if (p == 'value') {
 									value = op;
-								}else if(p == 'description'){
+								} else if (p == 'description') {
 									description = op;
 								}
 								table += op;
@@ -58,9 +59,16 @@
 							}
 							//<a href="javasctipt:void(0);" onclick="xxx.html?userid=zhangsan">
 							table += "<td>";
-							table += "<a href='javasctipt:void(0)' onclick='editDD(\"" + id + "\",\""+ key + "\",\""+ value + "\",\""+ description + "\")'>编辑</a>";
+							table += "<a href='javasctipt:void(0)' onclick='editDD(\""
+									+ id
+									+ "\",\""
+									+ key
+									+ "\",\""
+									+ value
+									+ "\",\"" + description + "\")'>编辑</a>";
 							table += "<br/>";
-							table += "<a href='javasctipt:void(0)' onclick='deleteDD(\"" + id + "\")'>删除</a>";
+							table += "<a href='javasctipt:void(0)' onclick='deleteDD(\""
+									+ id + "\")'>删除</a>";
 							table += "</td>";
 							table += "</tr>";
 						}
@@ -75,7 +83,7 @@
 		document.getElementById("ddForm").style.display = "block";
 	}
 
-	var editDD = function(id,key,value,description) {
+	var editDD = function(id, key, value, description) {
 		document.getElementById("ddForm").style.display = "block";
 		$("#ddid").val(id);
 		$("#ddKey").val(key);
@@ -89,15 +97,17 @@
 			url : location.origin + "/deleteDDVOByID",
 			contentType : "application/json",
 			dataType : "json",
-			data : {DDID:id},
+			data : {
+				DDID : id
+			},
 			success : function(data) {
 				alert("删除文件成功");
 				assembleTable();
 			}
 		});
 	}
-	
-	var saveDD = function(){
+
+	var saveDD = function() {
 		var ddKey = $("#ddKey").val();
 		var ddValue = $("#ddValue").val();
 		var ddDescription = $("#ddDescription").val();
@@ -108,18 +118,19 @@
 			contentType : "application/json",
 			dataType : "json",
 			data : {
-				ddID:ddID,
-				ddKey:ddKey,
-				ddValue:ddValue,
-				ddDescription:ddDescription},
+				ddID : ddID,
+				ddKey : ddKey,
+				ddValue : ddValue,
+				ddDescription : ddDescription
+			},
 			success : function(data) {
 				assembleTable();
 				cancelDD();
 			}
 		});
 	}
-	
-	var cancelDD = function(){
+
+	var cancelDD = function() {
 		document.getElementById("ddForm").style.display = "none";
 		$("#ddid").val("");
 		$("#ddKey").val("");
@@ -157,7 +168,8 @@ table tr:nth-child(n+2) {
 table tr:nth-child(2n+2) {
 	background-color: white;
 }
-.label{
+
+.label {
 	float: left;
 	width: 100px;
 }
@@ -169,25 +181,25 @@ table tr:nth-child(2n+2) {
 		<div id="div1" style="display: none">
 			<div id="table1"></div>
 		</div>
-		<form id="ddForm"  style="display: none">
+		<form id="ddForm" style="display: none">
 			<div>
 				<div>
-					<input id="ddid" type="hidden"/>
+					<input id="ddid" type="hidden" />
 				</div>
 				<div>
 					<div class='label'>
 						<span>Key</span>
 					</div>
-					<div class='inputValue' >
-						<input type="text" id="ddKey"/>
+					<div class='inputValue'>
+						<input type="text" id="ddKey" />
 					</div>
 				</div>
 				<div>
 					<div class='label'>
 						<span>Value</span>
 					</div>
-					<div class='inputValue' >
-						<input type="text" id="ddValue"/>
+					<div class='inputValue'>
+						<input type="text" id="ddValue" />
 					</div>
 				</div>
 				<div>
@@ -199,8 +211,8 @@ table tr:nth-child(2n+2) {
 					</div>
 				</div>
 				<div>
-					<input type="button" value="保存" onclick="saveDD()"/>
-					<input type="button" value="取消" onclick="cancelDD()"/>
+					<input type="button" value="保存" onclick="saveDD()" /> <input
+						type="button" value="取消" onclick="cancelDD()" />
 				</div>
 			</div>
 		</form>

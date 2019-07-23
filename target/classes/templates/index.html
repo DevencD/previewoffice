@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8"/>
-    <title>Demo</title>
-    <script src="templates/jquery.js"></script>
-    <script type="text/javascript">
+<meta charset="UTF-8" />
+<title>Demo</title>
+<script src="templates/jquery.js"></script>
+<script type="text/javascript">
         //图片上传
         var xhr;
         var filePath;
@@ -129,15 +129,16 @@
     </script>
 </head>
 <body>
-<progress id="progressBar" value="0" max="100" style="width: 300px;"></progress>
-<span id="percentage"></span><span id="time"></span>
-<br /><br />
-<input type="file" id="file" name="myfile" />
-<input type="button" onclick="UpladFile()" value="上传" />
-<input type="button" onclick="cancleUploadFile()" value="取消" />
-<input type="button" onclick="previewExcelhtml()" value="HTML预览" />
-<input type="button" onclick="previewExcelpdf()" value="PDF预览" />
-<div id="preview">
-</div>
+	<progress id="progressBar" value="0" max="100" style="width: 300px;"></progress>
+	<span id="percentage"></span>
+	<span id="time"></span>
+	<br />
+	<br />
+	<input type="file" id="file" name="myfile" />
+	<input type="button" onclick="UpladFile()" value="上传" />
+	<input type="button" onclick="cancleUploadFile()" value="取消" />
+	<input type="button" onclick="previewExcelhtml()" value="HTML预览" />
+	<input type="button" onclick="previewExcelpdf()" value="PDF预览" />
+	<div id="preview"></div>
 </body>
 </html>

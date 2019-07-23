@@ -1,5 +1,6 @@
 package previewoffice.controller;
 
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,31 +34,38 @@ import previewoffice.util.ProjectConstant;
 import previewoffice.util.UploadActionUtil;
 import previewoffice.vo.AttachmentPartVO;
 import previewoffice.vo.AttachmentVO;
- 
+
+
 @RestController
 @RequestMapping("/uploadFile")
-public class UploadFileController {
- 
+public class UploadFileController
+{
+
     @Autowired
     private IAttachmentMapper attachmentDao;
+
     @Autowired
     private IAttachementPartMapper attachmentPartDao;
-    
+
     @GetMapping("/getAttList")
-    public Map<String,List<AttachmentVO>> getAttachmentList(){
-        Map<String,List<AttachmentVO>> result = new HashMap<String, List<AttachmentVO>>();
+    public Map<String, List<AttachmentVO>> getAttachmentList()
+    {
+        Map<String, List<AttachmentVO>> result = new HashMap<String, List<AttachmentVO>>();
         result.put("result", attachmentDao.queryAll());
         return result;
     }
-    
+
     @GetMapping("/deleteAtt")
-    public String deleteAttachment(HttpServletRequest httpServletRequest) {
+    public String deleteAttachment(HttpServletRequest httpServletRequest)
+    {
         String fileId = httpServletRequest.getParameter("fileId");
         AttachmentVO attachment = attachmentDao.getFileById(fileId);
         String filePath = attachment.getFilePath();
-        if(!StringUtils.isEmpty(filePath)) {
+        if (!StringUtils.isEmpty(filePath))
+        {
             File file = new File(filePath);
-            if(file.exists()) {
+            if (file.exists())
+            {
                 file.delete();
             }
         }
@@ -65,45 +73,59 @@ public class UploadFileController {
         attachmentPartDao.deleteAttachmentPartByFileId(fileId);
         return null;
     }
-    
+
     @GetMapping("/download")
-    public String downloadAttachment(HttpServletRequest httpServletRequest,HttpServletResponse response) throws UnsupportedEncodingException{
+    public String downloadAttachment(HttpServletRequest httpServletRequest,
+                                     HttpServletResponse response)
+        throws UnsupportedEncodingException
+    {
         String fileId = httpServletRequest.getParameter("fileId");
-        if(StringUtils.isEmpty(fileId)) {
+        if (StringUtils.isEmpty(fileId))
+        {
             return null;
-        }else {
+        }
+        else
+        {
             AttachmentVO attachment = attachmentDao.getFileById(fileId);
-            if(null != attachment) {
+            if (null != attachment)
+            {
                 String fileName = attachment.getFileName();
                 String filePath = attachment.getFilePath();
                 fileName = new String(fileName.getBytes("GBK"), "ISO-8859-1");
                 File file = new File(filePath);
-                if(file.exists()) {
+                if (file.exists())
+                {
                     response.reset();
                     response.setContentType("application/octet-stream");
                     response.setCharacterEncoding("utf-8");
-                    response.setContentLength((int) file.length());
+                    response.setContentLength((int)file.length());
                     response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
                     byte[] buff = new byte[1024];
                     BufferedInputStream bis = null;
                     OutputStream os = null;
-                    try {
+                    try
+                    {
                         os = response.getOutputStream();
                         bis = new BufferedInputStream(new FileInputStream(file));
                         int i = 0;
-                        while ((i = bis.read(buff)) != -1) {
+                        while ((i = bis.read(buff)) != -1)
+                        {
                             os.write(buff, 0, i);
                             os.flush();
                         }
                     }
-                    catch (Exception e) {
-                       e.printStackTrace();
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
                     finally
                     {
-                        try {
+                        try
+                        {
                             bis.close();
-                        } catch (IOException e) {
+                        }
+                        catch (IOException e)
+                        {
                             e.printStackTrace();
                         }
                     }
@@ -112,25 +134,31 @@ public class UploadFileController {
         }
         return null;
     }
-    
+
     @PostMapping("/upload")
-    public String upload(HttpServletRequest httpServletRequest) throws Exception {
+    public String upload(HttpServletRequest httpServletRequest)
+        throws Exception
+    {
         List<String> list = UploadActionUtil.uploadFile(httpServletRequest);
         return list.get(0).toString();
     }
-    
+
     @GetMapping("/transfer/getFileId")
-    public Map<String,String> getFileID(HttpServletRequest httpServletRequest) {
+    public Map<String, String> getFileID(HttpServletRequest httpServletRequest)
+    {
         String fileName = httpServletRequest.getParameter("fileName");
-        String fileId = UUID.randomUUID().toString().replace("-", "") + ProjectConstant.ATTACHMENTID_SUFFIX;
+        String fileId = UUID.randomUUID().toString().replace("-", "")
+                        + ProjectConstant.ATTACHMENTID_SUFFIX;
         attachmentDao.createAttachment(fileId, fileName);
-        Map<String,String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<String, String>();
         result.put("fileId", fileId);
         return result;
     }
-    
+
     @GetMapping("/transfer")
-    public Map<String,String> transfer(HttpServletRequest httpServletRequest) throws Exception {
+    public Map<String, String> transfer(HttpServletRequest httpServletRequest)
+        throws Exception
+    {
 //        InputStream stream = httpServletRequest.getInputStream();
 //        int lengthOfContent = httpServletRequest.getContentLength();
 //        ByteArrayOutputStream outStream = new ByteArrayOutputStream();  
@@ -141,35 +169,43 @@ public class UploadFileController {
 //        data = null;   
 //        String fileContent = new String(outStream.toByteArray(),"UTF-8");
 //      fileName = URLDecoder.decode(new String(org.apache.commons.codec.binary.Base64.decodeBase64(fileName)));
-        Map<String,String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<String, String>();
         String fileId = httpServletRequest.getParameter("fileID");
         String fileComplete = httpServletRequest.getParameter("fileComplete");
         String fileContentPart = httpServletRequest.getParameter("fileContentPart");
         String fileSeria = httpServletRequest.getParameter("fileSeria");
-        String attachmentPartId = UUID.randomUUID().toString().replace("-", "") + ProjectConstant.ATTACHMENTPARTID_SUFFIX;
+        String attachmentPartId = UUID.randomUUID().toString().replace("-", "")
+                                  + ProjectConstant.ATTACHMENTPARTID_SUFFIX;
         AttachmentPartVO attachmentPart = new AttachmentPartVO();
         attachmentPart.setId(attachmentPartId);
         attachmentPart.setFileId(fileId);
         attachmentPart.setFileSeria(Integer.parseInt(fileSeria));
         attachmentPart.setFileContentPart(fileContentPart);
         attachmentPartDao.createAttachmentPart(attachmentPart);
-        if(Boolean.toString(false).equals(fileComplete)) {
+        if (Boolean.toString(false).equals(fileComplete))
+        {
             result.put("fileComplete", Boolean.toString(false));
             return result;
-        }else {
+        }
+        else
+        {
             StringBuffer fileContent = new StringBuffer();
-            List<AttachmentPartVO> attachmentParts = attachmentPartDao.getAttachementByFileID(fileId);
-            for(int i=0,size=attachmentParts.size();i<size;i++) {
+            List<AttachmentPartVO> attachmentParts = attachmentPartDao.getAttachementByFileID(
+                fileId);
+            for (int i = 0, size = attachmentParts.size(); i < size; i++ )
+            {
                 AttachmentPartVO attachmentPartVO = attachmentParts.get(i);
                 fileContent.append(attachmentPartVO.getFileContentPart());
             }
-            byte [] b = Base64.decodeBase64(fileContent.toString());
-            for(int i=0;i<b.length;i++) {
-                if(b[i]<0) {
-                    b[i]+=256;
+            byte[] b = Base64.decodeBase64(fileContent.toString());
+            for (int i = 0; i < b.length; i++ )
+            {
+                if (b[i] < 0)
+                {
+                    b[i] += 256;
                 }
             }
-         // 取得当前上传文件的文件名称
+            // 取得当前上传文件的文件名称
             String myFileName = attachmentDao.getFileNameById(fileId);
             // 如果名称不为“”,说明该文件存在，否则说明该文件不存在
             if (myFileName.trim() != "")
@@ -178,15 +214,14 @@ public class UploadFileController {
 //                // String tempName="demo"+fileTyps;
 //                String tempName = UUID.randomUUID().toString() + fileTyps;
                 // 创建文件夹
-                String folderPath = ProjectConstant.SAVEFILEPATH + File.separator
-                                    + folderName();
+                String folderPath = ProjectConstant.SAVEFILEPATH + File.separator + folderName();
                 File fileFolder = new File(folderPath);
                 if (!fileFolder.exists() && !fileFolder.isDirectory())
                 {
                     fileFolder.mkdirs();
                 }
                 myFileName = folderPath + File.separator + myFileName;
-                
+
             }
             OutputStream outputStream = new FileOutputStream(myFileName);
             outputStream.write(b);
@@ -197,11 +232,9 @@ public class UploadFileController {
             result.put("filePath", myFileName);
             return result;
         }
-        
 
-        
     }
-    
+
     /**
      * 得年月日的文件夹名称
      *
