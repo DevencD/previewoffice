@@ -3,13 +3,6 @@ soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwi
 
 
 
-create table T_DataDictionary
-(
-id int primary key,
-key varchar(255),
-value varchar(255),
-description varchar(255)
-);
 
 select t.key,t.value from T_DataDictionary t where t.key;
 insert into T_DataDictionary(id,key,value,description)values(2,'openofficeIP','192.168.182.128',null)
@@ -34,7 +27,7 @@ commit;
 
 create table T_DataDictionary
 (
-id int primary key,
+id varchar(60) primary key,
 key varchar(255),
 value varchar(255),
 description varchar(255)

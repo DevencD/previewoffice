@@ -18,11 +18,27 @@
         select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where KEY = #{DDkey}
     </select>
     
-    <select id="getDDByID" parameterType="int"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+    <select id="getDDByID" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
         select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where ID = #{id}
     </select>
     
  	<select id="getDDValueByKey" parameterType="string"  resultType="string">
         select VALUE from T_DataDictionary where KEY = #{DDkey}
     </select>
+    
+    <select id="getDDList" resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+    	select * from T_DataDictionary
+    </select>
+    
+    <insert id="createDD" parameterType="previewoffice.vo.DataDictionaryVO">
+    	insert into T_DataDictionary (id,key,value,description) values(#{DD.id},#{DD.key},#{DD.value},#{DD.description})
+    </insert>
+    
+    <delete id="deleteDDByID" parameterType="string">
+    	delete from T_DataDictionary where id = #{id}
+    </delete>
+    
+    <update id="updateDD" parameterType="previewoffice.vo.DataDictionaryVO">
+    	update T_DataDictionary set key = #{DD.key},value=#{DD.value},description=#{DD.description} where id = #{DD.id}
+    </update>
 </mapper>

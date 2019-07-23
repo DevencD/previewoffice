@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -12,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import previewoffice.mapper.IDataDictionaryMapper;
+import previewoffice.util.ProjectConstant;
 import previewoffice.vo.DataDictionaryVO;
 
 @Service
@@ -58,6 +60,15 @@ public class DDServiceImpl implements IDDService
     public String getDDValueByKey(String key)
     {
         return ddDao.getDDValueByKey(key);
+    }
+    
+    @Override
+    public String createDD(DataDictionaryVO dataDictionaryVO)
+    {
+        String ddID = UUID.randomUUID().toString().replace("-", "") + ProjectConstant.DATADICTIONARTID_SUFFIX;
+        dataDictionaryVO.setId(ddID);
+        ddDao.createDD(dataDictionaryVO);
+        return ddID;
     }
 
 }
