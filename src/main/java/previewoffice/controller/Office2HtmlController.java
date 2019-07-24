@@ -57,22 +57,5 @@ public class Office2HtmlController
         return result;
     }
 
-    @RequestMapping("/index")
-    public String index()
-    {
-        return "index";
-    }
-
-    @RequestMapping("/preview")
-    public String preview()
-    {
-        return "preview";
-    }
-
-    @RequestMapping("/demo")
-    public String demo()
-    {
-        return "upload";
-    }
 
 }

@@ -24,12 +24,6 @@ import previewoffice.vo.DataDictionaryVO;
 public class DataDictionaryController
 {
 
-    @RequestMapping("/ddlist")
-    public String demo()
-    {
-        return "dataDictionary";
-    }
-
     @Autowired
     IDataDictionaryMapper dataDictionaryMapper;
 
