@@ -38,4 +38,7 @@
     	delete from T_Attachment_part where file_id = #{fileID}
     </delete>
     
+    <select id="getPartCount4Att" parameterType="string" resultType="int" >
+    	select count(1) as count from T_Attachment_part where file_id = #{fileID} order by file_seria
+    </select>
 </mapper>

@@ -230,6 +230,9 @@ public class UploadFileController
             attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), myFileName);
             result.put("fileComplete", Boolean.toString(true));
             result.put("filePath", myFileName);
+            int filePartCount = attachmentPartDao.getPartCount4Att(fileId);
+            result.put("filePartCount", filePartCount + "");
+            result.put("maxFileSeria", fileSeria);
             return result;
         }
 

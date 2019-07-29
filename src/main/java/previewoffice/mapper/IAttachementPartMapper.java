@@ -19,5 +19,7 @@ public interface IAttachementPartMapper
     List<AttachmentPartVO> getAttachementByFileID(@Param("fileID") String fileID);
 
     void deleteAttachmentPartByFileId(@Param("fileID") String fileID);
+    
+    int getPartCount4Att(@Param("fileID") String fileID);
 
 }
