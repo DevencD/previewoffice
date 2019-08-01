@@ -201,7 +201,9 @@
 									+ id + "\")'>下载</a>";
 							table += "<br/>";
 							table += "<a href='javasctipt:void(0)' onclick='deleteFile(\""
-									+ id + "\")'>删除</a>";
+									+ id + "\")'>删除</a>        ";
+							table += "<a href='javasctipt:void(0)' onclick='previewExcelpdf(\""
+									+ id + "\")'>PDF预览</a>";
 							table += "</td>";
 							table += "</tr>";
 						}
@@ -230,6 +232,25 @@
 			}
 		});
 	}
+	var previewExcelpdf = function(id){
+    	var target = location.origin+"/office2pdf";
+    	$.ajax({
+            type : "GET",
+            url : target,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            data : {fileID:id},
+            success : function (data) {
+            	if(data.state=='true'){
+            		window.open(location.origin+"/preview?"+data.file, "_blank");
+            	}
+            	
+            },
+            error: function(data){
+            	alert("error");
+            }
+        }); 
+    }
 </script>
 <style>
 table {

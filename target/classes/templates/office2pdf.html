@@ -7,7 +7,7 @@
 <script type="text/javascript">
         //图片上传
         var xhr;
-        var filePath;
+        var fileID;
         //上传文件方法
         function UpladFile() {
             var fileObj = document.getElementById("file").files[0]; // js 获取文件对象
@@ -36,7 +36,7 @@
 
             var data = evt.target.responseText;
             if(data) {
-            	filePath = data;
+            	fileID = data;
                 //alert("上传成功！");
             }else{
                 alert("上传失败！");
@@ -92,11 +92,11 @@
         	//alert(filePath);
         	var target = location.origin+"/office2html";
         	$.ajax({
-                type : "POST",
+                type : "GET",
                 url : target,
                 contentType: "application/x-www-form-urlencoded",
                 dataType: "json",
-                data : {filePath:filePath},
+                data : {fileID:fileID},
                 success : function (data) {
                 	var html = '<iframe height="482" width="950">'+ data.html + '</iframe>';
                 	document.getElementById("preview").innerHTML = data.html;
@@ -110,11 +110,11 @@
         function previewExcelpdf(){
         	var target = location.origin+"/office2pdf";
         	$.ajax({
-                type : "POST",
+                type : "GET",
                 url : target,
                 contentType: "application/x-www-form-urlencoded",
                 dataType: "json",
-                data : {filePath:filePath},
+                data : {fileID:fileID},
                 success : function (data) {
                 	if(data.state=='true'){
                 		window.open(location.origin+"/preview?"+data.file, "_blank");

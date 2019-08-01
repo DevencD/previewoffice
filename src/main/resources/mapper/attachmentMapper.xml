@@ -31,6 +31,10 @@
     	select * from T_Attachment order by file_create_time desc
     </select>
     
+    <insert id="createAttachmentByVO" parameterType="previewoffice.vo.AttachmentVO">
+    	insert into T_Attachment (id,file_name,file_seria_length,file_path,file_create_time,file_complete_time) values(#{file.id},#{file.fileName},#{file.fileSeriaLength},#{file.filePath},sysdate,sysdate)
+    </insert>
+    
     <insert id="createAttachment" parameterType="previewoffice.vo.AttachmentVO">
     	insert into T_Attachment (id,file_name,file_create_time) values(#{id},#{fileName},sysdate)
     </insert>

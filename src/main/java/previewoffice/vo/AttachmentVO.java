@@ -11,7 +11,7 @@ public class AttachmentVO
 
     private String fileName;
 
-    private int fileSeriaLength;
+    private long fileSeriaLength;
 
     private String filePath;
 
@@ -39,12 +39,12 @@ public class AttachmentVO
         this.fileName = fileName;
     }
 
-    public int getFileSeriaLength()
+    public long getFileSeriaLength()
     {
         return fileSeriaLength;
     }
 
-    public void setFileSeriaLength(int fileSeriaLength)
+    public void setFileSeriaLength(long fileSeriaLength)
     {
         this.fileSeriaLength = fileSeriaLength;
     }

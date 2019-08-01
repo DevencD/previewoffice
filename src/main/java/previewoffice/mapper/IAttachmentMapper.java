@@ -14,10 +14,12 @@ import previewoffice.vo.AttachmentVO;
 @Repository
 public interface IAttachmentMapper
 {
+    void createAttachmentByVO(@Param("file") AttachmentVO file);
+    
     void createAttachment(@Param("id") String fileID, @Param("fileName") String fileName);
 
     void updateComplete(@Param("fileID") String fileID,
-                        @Param("fileSeriaLength") int fileSeriaLength,
+                        @Param("fileSeriaLength") long fileSeriaLength,
                         @Param("filePath") String filePath);
 
     List<AttachmentVO> queryAll();

@@ -139,8 +139,20 @@ public class UploadFileController
     public String upload(HttpServletRequest httpServletRequest)
         throws Exception
     {
-        List<String> list = UploadActionUtil.uploadFile(httpServletRequest);
-        return list.get(0).toString();
+        List<Map<String,String>> list = UploadActionUtil.uploadFile(httpServletRequest);
+        Map<String,String> oneFile = list.get(0);
+        String fileName = oneFile.get("fileName");
+        String filePath = oneFile.get("filePath");
+        String fileSize = oneFile.get("fileSize");
+        String fileID = UUID.randomUUID().toString().replace("-", "")
+            + ProjectConstant.ATTACHMENTID_SUFFIX;
+        AttachmentVO file = new AttachmentVO();
+        file.setId(fileID);
+        file.setFileName(fileName);
+        file.setFilePath(filePath);
+        file.setFileSeriaLength(Long.parseLong(fileSize));
+        attachmentDao.createAttachmentByVO(file);
+        return fileID;
     }
 
     @GetMapping("/transfer/getFileId")

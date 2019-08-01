@@ -17,10 +17,10 @@ import java.util.*;
 public class UploadActionUtil
 {
 
-    public static List<String> uploadFile(HttpServletRequest request)
+    public static List<Map<String,String>> uploadFile(HttpServletRequest request)
         throws Exception
     {
-        List<String> list = new ArrayList<String>();
+        List<Map<String,String>> list = new ArrayList<Map<String,String>>();
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
             request.getSession().getServletContext());
         if (multipartResolver.isMultipart(request))
@@ -29,12 +29,18 @@ public class UploadActionUtil
             Iterator<String> iterator = multiRequest.getFileNames();
             while (iterator.hasNext())
             {
+                Map<String,String> oneFile = new HashMap<String,String>();
+                String filePath = "";
+                String fileName = "";
+                long fileSize = 0;
                 // 取得上传文件
                 MultipartFile file = multiRequest.getFile(iterator.next());
                 if (file != null)
                 {
                     // 取得当前上传文件的文件名称
                     String myFileName = file.getOriginalFilename();
+                    fileName = myFileName;
+                    fileSize = file.getSize();
                     // 如果名称不为“”,说明该文件存在，否则说明该文件不存在
                     if (myFileName.trim() != "")
                     {
@@ -49,10 +55,14 @@ public class UploadActionUtil
                         {
                             fileFolder.mkdirs();
                         }
-                        File uploadFile = new File(folderPath + File.separator + tempName);
+                        filePath = folderPath + File.separator + tempName;
+                        File uploadFile = new File(filePath);
                         file.transferTo(uploadFile);
-                        myFileName = folderName() + File.separator + tempName;
-                        list.add(ProjectConstant.SAVEFILEPATH + "//" + myFileName);
+                        
+                        oneFile.put("fileName", fileName);
+                        oneFile.put("filePath", filePath);
+                        oneFile.put("fileSize", fileSize+"");
+                        list.add(oneFile);
                     }
                 }
             }
