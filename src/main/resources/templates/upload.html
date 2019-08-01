@@ -28,8 +28,10 @@
 				fileContent = fileContent.substring(
 						fileContent.indexOf(",") + 1, fileContent.length);
 				var length = fileContent.length;
-
 				var times = Math.ceil(length / filePerSize);
+				var progressBar = document.getElementById("progressBar");
+		        var percentageDiv = document.getElementById("percentage");
+		        progressBar.max = times;
 				var fileID = "";
 				$.ajax({
 					type : "GET",
@@ -48,6 +50,7 @@
 					complete : function() {
 					}
 				});
+				var transferCount = 0;
 				setTimeout(
 						function() {
 							for (var i = 0; i < times; i++) {
@@ -68,6 +71,9 @@
 											dataType : "json",
 											data : data,
 											success : function(result) {
+												transferCount ++;
+												progressBar.value = transferCount;
+										        percentageDiv.innerHTML = Math.round(transferCount / times * 100) + "%";
 												if (result.fileComplete == "true") {
 													if(result.maxFileSeria>result.filePartCount){
 														alert("文件传输过程中有丢失，请重新上传");
@@ -261,6 +267,10 @@ table tr:nth-child(2n+2) {
 	<h2>选择文件：</h2>
 	<input id="chkFile" type="file" onchange="previewFile()" />
 	<br />
+	<br />
+	<progress id="progressBar" value="0" max="100" style="width: 400px;"></progress>
+	<span id="percentage"></span>
+
 	<h2>文件位置：</h2>
 	<input id="showText" style="width: 65%; height: 30px;" />
 	<br />
