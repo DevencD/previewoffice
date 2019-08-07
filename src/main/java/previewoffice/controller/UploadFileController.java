@@ -220,11 +220,12 @@ public class UploadFileController
             // 取得当前上传文件的文件名称
             String myFileName = attachmentDao.getFileNameById(fileId);
             // 如果名称不为“”,说明该文件存在，否则说明该文件不存在
+            String filePath = "";
             if (myFileName.trim() != "")
             {
-//                String fileTyps = myFileName.substring(myFileName.lastIndexOf("."));
+                String fileTyps = myFileName.substring(myFileName.lastIndexOf("."));
 //                // String tempName="demo"+fileTyps;
-//                String tempName = UUID.randomUUID().toString() + fileTyps;
+                String tempName = UUID.randomUUID().toString() + fileTyps;
                 // 创建文件夹
                 String folderPath = ProjectConstant.SAVEFILEPATH + File.separator + folderName();
                 File fileFolder = new File(folderPath);
@@ -232,14 +233,14 @@ public class UploadFileController
                 {
                     fileFolder.mkdirs();
                 }
-                myFileName = folderPath + File.separator + myFileName;
+                filePath = folderPath + File.separator + tempName;
 
             }
-            OutputStream outputStream = new FileOutputStream(myFileName);
+            OutputStream outputStream = new FileOutputStream(filePath);
             outputStream.write(b);
             outputStream.flush();
             outputStream.close();
-            attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), myFileName);
+            attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), filePath);
             result.put("fileComplete", Boolean.toString(true));
             result.put("filePath", myFileName);
             int filePartCount = attachmentPartDao.getPartCount4Att(fileId);
