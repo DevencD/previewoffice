@@ -2,12 +2,14 @@ package previewoffice.controller;
 
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -91,7 +93,7 @@ public class UploadFileController
             {
                 String fileName = attachment.getFileName();
                 String filePath = attachment.getFilePath();
-                fileName = new String(fileName.getBytes("GBK"), "ISO-8859-1");
+//                fileName = new String(fileName.getBytes("GBK"), "ISO-8859-1");
                 File file = new File(filePath);
                 if (file.exists())
                 {
@@ -99,19 +101,19 @@ public class UploadFileController
                     response.setContentType("application/octet-stream");
                     response.setCharacterEncoding("utf-8");
                     response.setContentLength((int)file.length());
-                    response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+                    response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName ,"UTF-8"));
                     byte[] buff = new byte[1024];
                     BufferedInputStream bis = null;
-                    OutputStream os = null;
+                    BufferedOutputStream out = null;
                     try
                     {
-                        os = response.getOutputStream();
+                        out = new BufferedOutputStream(response.getOutputStream());
                         bis = new BufferedInputStream(new FileInputStream(file));
-                        int i = 0;
-                        while ((i = bis.read(buff)) != -1)
+                        int len = 0;
+                        while ((len = bis.read(buff)) != -1)
                         {
-                            os.write(buff, 0, i);
-                            os.flush();
+                            out.write(buff, 0, len);
+                            out.flush();
                         }
                     }
                     catch (Exception e)
