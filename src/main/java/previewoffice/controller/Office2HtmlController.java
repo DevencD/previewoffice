@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import previewoffice.mapper.IAttachmentMapper;
 import previewoffice.service.IDDService;
+import previewoffice.service.IOperRecordService;
 import previewoffice.util.Office2PDF;
+import previewoffice.util.OperType;
 import previewoffice.util.POIReadExcel;
 import previewoffice.util.ProjectConstant;
 import previewoffice.vo.AttachmentVO;
@@ -29,6 +31,9 @@ public class Office2HtmlController
     
     @Autowired
     private IAttachmentMapper attDao;
+    
+    @Autowired
+    private IOperRecordService recordOper;
 
     @RequestMapping(value = "/office2html")
     @ResponseBody
@@ -48,6 +53,7 @@ public class Office2HtmlController
     @ResponseBody
     public Map<String, String> office2PDF(HttpServletRequest httpServletRequest)
     {
+        recordOper.recordOper(httpServletRequest, OperType.PREVIEW.getValue());
         String fileID = httpServletRequest.getParameter("fileID");
         AttachmentVO file = attDao.getFileById(fileID);
         String filePath = file.getFilePath();

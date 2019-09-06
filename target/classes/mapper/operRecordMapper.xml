@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 映射文件，映射到对应的SQL接口 -->
+<mapper namespace="previewoffice.mapper.IOperRecordMapper">
+	
+	<!-- 查询数据 -->
+	<!-- 入参定义：在接口定义中使用@Param注解(单参/多参都可使用) -->
+	<!-- 语句末尾不能有分号：ORA-00911: invalid character -->
+
+    <resultMap id="OperRecord" type="previewoffice.vo.OperRecordVO">
+        <id property="id" column="ID"/>
+        <result property="operIP" column="oper_IP"/>
+        <result property="operTime" column="oper_time"/>
+        <result property="operType" column="oper_type"/>
+    </resultMap>
+	<!-- 
+    <select id="getDDByKey" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+        select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where KEY = #{DDkey}
+    </select>
+    
+    <select id="getDDByID" parameterType="int"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
+        select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where ID = #{id}
+    </select>
+    
+ 	<select id="getDDValueByKey" parameterType="string"  resultType="string">
+        select VALUE from T_DataDictionary where KEY = #{DDkey}
+    </select> -->
+    <select id="queryAll" resultType="previewoffice.vo.OperRecordVO" resultMap="OperRecord">
+    	select * from T_OperRecord order by oper_time desc
+    </select>
+    
+    <insert id="createOperRecordByVO" parameterType="previewoffice.vo.OperRecordVO">
+    	insert into T_OperRecord (id,oper_IP,oper_time,oper_type) values(#{operRecord.id},#{operRecord.operIP},sysdate,#{operRecord.operType})
+    </insert>
+    
+</mapper>

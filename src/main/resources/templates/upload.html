@@ -157,12 +157,16 @@
 									{
 										label:'操作',
 										width:'10%'
-									},];
+									},
+									{
+										label: 'state',
+										width: 0
+									}];
 						table += "<tr>";
 						for (var i = 0, size = str.length; i < size; i++) {
 							var label = str[i].label;
 							var widthSet = str[i].width;
-							if (i == 0) {
+							if (label == 'ID' || label == 'state') {
 								table += "<th style='display: none'>" + label
 										+ "</th>";
 							} else {
@@ -180,9 +184,9 @@
 							var id = "";
 							for ( var p in obj) {
 								var op = obj[p];
-								if (p == 'id') {
+								if (p == 'id' || p == 'state') {
 									table += "<td style='display: none'>";
-									id = op;
+									if(p == 'id') id = op;
 								} else {
 									table += "<td>";
 								}

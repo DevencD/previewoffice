@@ -21,6 +21,18 @@ public class AttachmentPartVO
     private String fileContentPart;
 
     private Date fileCreateTime;
+    
+    private int state;
+
+    public int getState()
+    {
+        return state;
+    }
+
+    public void setState(int state)
+    {
+        this.state = state;
+    }
 
     public String getId()
     {

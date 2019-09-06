@@ -3,6 +3,8 @@ package previewoffice.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
@@ -47,4 +49,5 @@ public class CrossConfig extends WebMvcConfigurerAdapter
             pdfPath.contains("file:") ? pdfPath : "file:" + pdfPath);
         super.addResourceHandlers(registry);
     }
+    
 }

@@ -42,19 +42,34 @@ file_name varchar(255),
 file_seria_length int,
 file_path varchar(255),
 file_create_time timestamp,
-file_complete_time timestamp 
+file_complete_time timestamp, 
+state int
 );
+alter table T_Attachment add state int;
+update T_Attachment set state = 1 ;
 create table T_Attachment_part
 (
  id varchar(60) primary key,
  file_id varchar(60),
  file_seria int,
  file_content_part nclob,
- file_create_time timestamp
+ file_create_time timestamp,
+ state int
 );
+alter table T_Attachment_part add state int;
+update T_Attachment_part set state = 1 ;
 drop table T_Attachment
 select * from T_Attachment_part where file_id = '' order by file_seria
 select sysdate  from dual
 select* from T_Attachment order by file_create_time
 delete from T_Attachment;
 delete from T_Attachment_part;
+
+
+create table T_OperRecord
+(
+id varchar(60) primary key,
+oper_IP varchar(255),
+oper_time timestamp,
+oper_type int
+);

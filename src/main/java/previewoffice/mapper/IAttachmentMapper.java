@@ -16,7 +16,7 @@ public interface IAttachmentMapper
 {
     void createAttachmentByVO(@Param("file") AttachmentVO file);
     
-    void createAttachment(@Param("id") String fileID, @Param("fileName") String fileName);
+    void createAttachment(@Param("id") String fileID, @Param("fileName") String fileName, @Param("state") int state);
 
     void updateComplete(@Param("fileID") String fileID,
                         @Param("fileSeriaLength") long fileSeriaLength,

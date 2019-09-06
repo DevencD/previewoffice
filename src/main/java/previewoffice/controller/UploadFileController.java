@@ -32,7 +32,10 @@ import com.alibaba.druid.util.StringUtils;
 
 import previewoffice.mapper.IAttachementPartMapper;
 import previewoffice.mapper.IAttachmentMapper;
+import previewoffice.service.IOperRecordService;
+import previewoffice.util.OperType;
 import previewoffice.util.ProjectConstant;
+import previewoffice.util.State;
 import previewoffice.util.UploadActionUtil;
 import previewoffice.vo.AttachmentPartVO;
 import previewoffice.vo.AttachmentVO;
@@ -48,6 +51,9 @@ public class UploadFileController
 
     @Autowired
     private IAttachementPartMapper attachmentPartDao;
+    
+    @Autowired
+    private IOperRecordService recordOper;
 
     @GetMapping("/getAttList")
     public Map<String, List<AttachmentVO>> getAttachmentList()
@@ -60,6 +66,7 @@ public class UploadFileController
     @GetMapping("/deleteAtt")
     public String deleteAttachment(HttpServletRequest httpServletRequest)
     {
+        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue());
         String fileId = httpServletRequest.getParameter("fileId");
         AttachmentVO attachment = attachmentDao.getFileById(fileId);
         String filePath = attachment.getFilePath();
@@ -68,7 +75,7 @@ public class UploadFileController
             File file = new File(filePath);
             if (file.exists())
             {
-                file.delete();
+//                file.delete();
             }
         }
         attachmentDao.deleteAttachmentById(fileId);
@@ -81,6 +88,7 @@ public class UploadFileController
                                      HttpServletResponse response)
         throws UnsupportedEncodingException
     {
+        recordOper.recordOper(httpServletRequest, OperType.DOWNLOAD.getValue());
         String fileId = httpServletRequest.getParameter("fileId");
         if (StringUtils.isEmpty(fileId))
         {
@@ -98,10 +106,10 @@ public class UploadFileController
                 if (file.exists())
                 {
                     response.reset();
-                    response.setContentType("application/octet-stream");
+                    response.setContentType("application/x-download");
                     response.setCharacterEncoding("utf-8");
                     response.setContentLength((int)file.length());
-                    response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName ,"UTF-8"));
+                    response.setHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode(fileName ,"UTF-8") + "\"");
                     byte[] buff = new byte[1024];
                     BufferedInputStream bis = null;
                     BufferedOutputStream out = null;
@@ -141,6 +149,7 @@ public class UploadFileController
     public String upload(HttpServletRequest httpServletRequest)
         throws Exception
     {
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue());
         List<Map<String,String>> list = UploadActionUtil.uploadFile(httpServletRequest);
         Map<String,String> oneFile = list.get(0);
         String fileName = oneFile.get("fileName");
@@ -153,6 +162,7 @@ public class UploadFileController
         file.setFileName(fileName);
         file.setFilePath(filePath);
         file.setFileSeriaLength(Long.parseLong(fileSize));
+        file.setState(State.ENABLE.getValue());
         attachmentDao.createAttachmentByVO(file);
         return fileID;
     }
@@ -160,10 +170,11 @@ public class UploadFileController
     @GetMapping("/transfer/getFileId")
     public Map<String, String> getFileID(HttpServletRequest httpServletRequest)
     {
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue());
         String fileName = httpServletRequest.getParameter("fileName");
         String fileId = UUID.randomUUID().toString().replace("-", "")
                         + ProjectConstant.ATTACHMENTID_SUFFIX;
-        attachmentDao.createAttachment(fileId, fileName);
+        attachmentDao.createAttachment(fileId, fileName,State.ENABLE.getValue());
         Map<String, String> result = new HashMap<String, String>();
         result.put("fileId", fileId);
         return result;

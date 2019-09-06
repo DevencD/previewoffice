@@ -17,6 +17,8 @@ import com.alibaba.druid.util.StringUtils;
 
 import previewoffice.mapper.IDataDictionaryMapper;
 import previewoffice.service.IDDService;
+import previewoffice.service.IOperRecordService;
+import previewoffice.util.OperType;
 import previewoffice.vo.DataDictionaryVO;
 
 
@@ -29,6 +31,9 @@ public class DataDictionaryController
 
     @Autowired
     IDDService ddService;
+    
+    @Autowired
+    IOperRecordService recordOper;
 
     @RequestMapping(method = RequestMethod.POST, value = "/getDDByKey")
     @ResponseBody
@@ -78,6 +83,7 @@ public class DataDictionaryController
     @ResponseBody
     public void updateDDVOByID(HttpServletRequest httpServletRequest)
     {
+        recordOper.recordOper(httpServletRequest, OperType.MODIFY.getValue());
         String ddID = httpServletRequest.getParameter("ddID");
         String ddKey = httpServletRequest.getParameter("ddKey");
         String ddValue = httpServletRequest.getParameter("ddValue");
@@ -94,6 +100,7 @@ public class DataDictionaryController
     @ResponseBody
     public void deleteDDVOByID(HttpServletRequest httpServletRequest)
     {
+        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue());
         String ddID = httpServletRequest.getParameter("DDID");
         dataDictionaryMapper.deleteDDByID(ddID);
     }
@@ -102,6 +109,7 @@ public class DataDictionaryController
     @ResponseBody
     public void createDD(HttpServletRequest httpServletRequest)
     {
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue());
         String ddID = httpServletRequest.getParameter("ddID");
         String ddKey = httpServletRequest.getParameter("ddKey");
         String ddValue = httpServletRequest.getParameter("ddValue");

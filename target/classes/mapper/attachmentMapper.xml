@@ -14,6 +14,7 @@
         <result property="filePath" column="file_path"/>
         <result property="fileCreateTime" column="file_create_time"/>
         <result property="fileCompleteTime" column="file_complete_time"/>
+        <result property="state" column="state"/>
     </resultMap>
 	<!-- 
     <select id="getDDByKey" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
@@ -28,15 +29,15 @@
         select VALUE from T_DataDictionary where KEY = #{DDkey}
     </select> -->
     <select id="queryAll" resultType="previewoffice.vo.AttachmentVO" resultMap="Attachment">
-    	select * from T_Attachment order by file_create_time desc
+    	select * from T_Attachment where state = 1 order by file_create_time desc
     </select>
     
     <insert id="createAttachmentByVO" parameterType="previewoffice.vo.AttachmentVO">
-    	insert into T_Attachment (id,file_name,file_seria_length,file_path,file_create_time,file_complete_time) values(#{file.id},#{file.fileName},#{file.fileSeriaLength},#{file.filePath},sysdate,sysdate)
+    	insert into T_Attachment (id,file_name,file_seria_length,file_path,file_create_time,file_complete_time,state) values(#{file.id},#{file.fileName},#{file.fileSeriaLength},#{file.filePath},sysdate,sysdate,#{file.state})
     </insert>
     
     <insert id="createAttachment" parameterType="previewoffice.vo.AttachmentVO">
-    	insert into T_Attachment (id,file_name,file_create_time) values(#{id},#{fileName},sysdate)
+    	insert into T_Attachment (id,file_name,file_create_time,state) values(#{id},#{fileName},sysdate,#{state})
     </insert>
     
     <update id="updateComplete">
@@ -51,7 +52,7 @@
     	select * from T_Attachment where id = #{id}
     </select>
     
-    <delete id="deleteAttachmentById" parameterType="string" >
-    	delete from T_Attachment where id = #{id}
-    </delete>
+    <update id="deleteAttachmentById" parameterType="string" >
+    	update T_Attachment set state = 0 where id = #{id}
+    </update>
 </mapper>

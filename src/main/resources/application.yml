@@ -35,6 +35,9 @@ spring:
 server:
     tomcat:
         basedir: logistics/tomcat
+        remote-ip-header: X-Real-IP
+        protocol-header: X-Forwarded-Proto
+    use-forward-headers: true
 
 
 #XML文件位置 指定DAO与SQL语句关联

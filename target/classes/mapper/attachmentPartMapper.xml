@@ -31,12 +31,12 @@
     </select>
     
     <insert id="createAttachmentPart" parameterType="previewoffice.vo.AttachmentPartVO">
-    	insert into T_Attachment_part (id,file_id,file_seria,file_content_part,file_create_time) values(#{attachmentPart.id},#{attachmentPart.fileId},#{attachmentPart.fileSeria},#{attachmentPart.fileContentPart},sysdate)
+    	insert into T_Attachment_part (id,file_id,file_seria,file_content_part,file_create_time,state) values(#{attachmentPart.id},#{attachmentPart.fileId},#{attachmentPart.fileSeria},#{attachmentPart.fileContentPart},sysdate,1)
     </insert>
     
-    <delete id="deleteAttachmentPartByFileId" parameterType="string">
-    	delete from T_Attachment_part where file_id = #{fileID}
-    </delete>
+    <update id="deleteAttachmentPartByFileId" parameterType="string">
+    	update T_Attachment_part set state = 0 where file_id = #{fileID}
+    </update>
     
     <select id="getPartCount4Att" parameterType="string" resultType="int" >
     	select count(1) as count from T_Attachment_part where file_id = #{fileID} order by file_seria

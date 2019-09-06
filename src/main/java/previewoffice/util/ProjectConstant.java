@@ -11,5 +11,7 @@ public class ProjectConstant
     public static final String ATTACHMENTPARTID_SUFFIX = "ATTACHMENTPARTID";
 
     public static final String DATADICTIONARTID_SUFFIX = "DATADICTIONARTID";
+    
+    public static final String OPERRECORDID_SUFFIX = "OPERRECORDID";
 
 }
