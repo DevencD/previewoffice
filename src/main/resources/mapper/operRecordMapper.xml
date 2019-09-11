@@ -12,6 +12,7 @@
         <result property="operIP" column="oper_IP"/>
         <result property="operTime" column="oper_time"/>
         <result property="operType" column="oper_type"/>
+        <result property="operUser" column="oper_user"/>
     </resultMap>
 	<!-- 
     <select id="getDDByKey" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
@@ -30,7 +31,7 @@
     </select>
     
     <insert id="createOperRecordByVO" parameterType="previewoffice.vo.OperRecordVO">
-    	insert into T_OperRecord (id,oper_IP,oper_time,oper_type) values(#{operRecord.id},#{operRecord.operIP},sysdate,#{operRecord.operType})
+    	insert into T_OperRecord (id,oper_IP,oper_time,oper_type,oper_user) values(#{operRecord.id},#{operRecord.operIP},#{operRecord.operTime},#{operRecord.operType},#{operRecord.operUser})
     </insert>
     
 </mapper>

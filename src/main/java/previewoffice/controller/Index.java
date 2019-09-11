@@ -38,5 +38,29 @@ public class Index
     {
         return "dataDictionary";
     }
+    
+    @RequestMapping("/loginwhiteList")
+    public String loginwhiteList()
+    {
+        return "loginNameWhiteList";
+    }
+    
+    @RequestMapping("/loginconfirm")
+    public String loginNameConfirm()
+    {
+        return "loginNameConfirm";
+    }
+    
+    @RequestMapping("/admin")
+    public String admin()
+    {
+        return "admin";
+    }
+    
+    @RequestMapping("/operRecord")
+    public String operRecord()
+    {
+        return "operRecord";
+    }
 
 }

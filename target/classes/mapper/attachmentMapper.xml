@@ -33,15 +33,15 @@
     </select>
     
     <insert id="createAttachmentByVO" parameterType="previewoffice.vo.AttachmentVO">
-    	insert into T_Attachment (id,file_name,file_seria_length,file_path,file_create_time,file_complete_time,state) values(#{file.id},#{file.fileName},#{file.fileSeriaLength},#{file.filePath},sysdate,sysdate,#{file.state})
+    	insert into T_Attachment (id,file_name,file_seria_length,file_path,file_create_time,file_complete_time,state) values(#{file.id},#{file.fileName},#{file.fileSeriaLength},#{file.filePath},#{file.fileCreateTime},#{file.fileCompleteTime},#{file.state})
     </insert>
     
     <insert id="createAttachment" parameterType="previewoffice.vo.AttachmentVO">
-    	insert into T_Attachment (id,file_name,file_create_time,state) values(#{id},#{fileName},sysdate,#{state})
+    	insert into T_Attachment (id,file_name,file_create_time,state) values(#{id},#{fileName},#{fileCreateTime},#{state})
     </insert>
     
     <update id="updateComplete">
-    	update T_Attachment set file_seria_length = #{fileSeriaLength,jdbcType=INTEGER},file_path=#{filePath,jdbcType=VARCHAR},file_complete_time=sysdate where id = #{fileID,jdbcType=VARCHAR}
+    	update T_Attachment set file_seria_length = #{fileSeriaLength,jdbcType=INTEGER},file_path=#{filePath,jdbcType=VARCHAR},file_complete_time=#{fileCompleteTime} where id = #{fileID,jdbcType=VARCHAR}
     </update>
     
     <select id="getFileNameById" parameterType="string" resultType="string">

@@ -124,14 +124,4 @@ public class UploadActionUtil
         return str;
     }
     
-    
-    public static void main(String[] args)
-    {
-        Set<String> a = new HashSet<String>();
-        a.add("aaaaa");
-        a.add("BBBB");
-        a.add("ccccc");
-        a.add("ddddd");
-        System.out.println(a.toString().replace("[", "'").replace("]", "'").replace(",", "','"));
-    }
 }

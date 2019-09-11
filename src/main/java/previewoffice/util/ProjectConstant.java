@@ -13,5 +13,7 @@ public class ProjectConstant
     public static final String DATADICTIONARTID_SUFFIX = "DATADICTIONARTID";
     
     public static final String OPERRECORDID_SUFFIX = "OPERRECORDID";
+    
+    public static final String LOGINNAMEWHITELISTID_SUFFIX = "LOGINNAMEWHITELISTID";
 
 }

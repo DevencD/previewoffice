@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>文件列表</title>
+<script src="templates/jquery.js"></script>
+<script type="text/javascript">
+
+	var init = function() {
+		assembleTable();
+	}
+
+	var assembleTable = function() {
+		$
+				.ajax({
+					type : "GET",
+					url : location.origin + "/getOperRecordList",
+					contentType : "application/json",
+					dataType : "json",
+					success : function(data) {
+						var files = data.result;
+						var table = "<table>";
+						table += "<caption>操作列表</caption>";
+						table += "<tbody>";
+						//添加表头
+						var str = [{
+										label:'ID',
+										width:0
+									},
+									{
+										label:'操作人',
+										width:'30%'
+									},
+									{
+										label:'操作环境IP',
+										width:'10%'
+									},
+									{
+										label:'操作时间',
+										width:'30%'
+									},
+									{
+										label:'操作类型',
+										width:0
+									}];
+						table += "<tr>";
+						for (var i = 0, size = str.length; i < size; i++) {
+							var label = str[i].label;
+							var widthSet = str[i].width;
+							if (label == 'ID' || label == 'state') {
+								table += "<th style='display: none'>" + label
+										+ "</th>";
+							} else {
+								table += "<th";
+								if(0!=widthSet ){
+									table +=  " style='width: " + widthSet +"'";
+								}
+								table += ">" + label + "</th>";
+							}
+						}
+						table += "</tr>";
+						for (var i = 0, size = files.length; i < size; i++) {
+							table += "<tr>";
+							var obj = files[i];
+							var id = "";
+							for ( var p in obj) {
+								var op = obj[p];
+								if (p == 'id' || p == 'state') {
+									table += "<td style='display: none'>";
+									if(p == 'id') id = op;
+								} else {
+									table += "<td>";
+								}
+								if (p == 'operTime') {
+									table += new Date(op).toLocaleString()
+											.replace(/:\d{1,2}$/, ' ');
+								} else {
+									table += op;
+								}
+								table += "</td>";
+							}
+							table += "</tr>";
+						}
+						table += "</tbody></table>";
+						document.getElementById("div1").style.display = "block";
+						document.getElementById("table1").innerHTML = table;
+					}
+				});
+	}
+</script>
+<style>
+table {
+	margin: auto;
+	width: 100%;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+table caption {
+	color: blue;
+	font: 34px consolas bold;
+}
+
+table th, table td {
+	border: 1px solid black;
+	text-align: center;
+}
+
+table th {
+	font: 20px consolas bold;
+	background-color: gray;
+}
+
+table tr:nth-child(n+2) {
+	background-color: cyan;
+}
+
+table tr:nth-child(2n+2) {
+	background-color: white;
+}
+</style>
+</head>
+<body onload="init()">
+	<div id="div1" style="display: none">
+		<div id="table1"></div>
+	</div>
+</body>
+</html>

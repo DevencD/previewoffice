@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>用户白名单</title>
+<script src="templates/jquery.js"></script>
+<script type="text/javascript">
+
+	var saveLoginConfirm = function() {
+		var name = $("#name").val();
+		var isInnerNet = $("input[name='isInnerNet']:checked").val();
+		if(!name || !isInnerNet){
+			alert("请输入姓名或者云之家账号，并选择内网还是外网！！");
+			return;
+		}
+		$.ajax({
+			type : "GET",
+			url : location.origin + "/confirmLoginName",
+			contentType : "application/json",
+			dataType : "json",
+			data : {
+				loginName : name,
+				isInnerNet: isInnerNet
+			},
+			success : function(data) {
+				if(data.result== "true"){
+					window.location.href = location.origin + "/index";
+				}else{
+					alert(data.message);
+				}
+				
+			}
+		});
+	}
+
+</script>
+<style>
+table {
+	margin: auto;
+	width: 60%;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+table caption {
+	color: blue;
+	font: 34px consolas bold;
+}
+
+table th, table td {
+	border: 1px solid black;
+	text-align: center;
+}
+
+table th {
+	font: 20px consolas bold;
+	background-color: gray;
+}
+
+table tr:nth-child(n+2) {
+	background-color: cyan;
+}
+
+table tr:nth-child(2n+2) {
+	background-color: white;
+}
+
+.label {
+	float: left;
+	width: 100px;
+}
+</style>
+</head>
+
+<body>
+	<div>
+		<form id="loginName" style="display: block">
+			<div>
+				<div>
+					<input id="loginNameID" type="hidden" />
+				</div>
+				<div>
+					<div class='label'>
+						<span>姓名  / 云之家账号</span>
+					</div>
+					<div class='inputValue'>
+						<input type="text" id="name" />
+					</div>
+					<div class='label'>
+						<span>内网  / 外网</span>
+					</div>
+					<div class='inputValue'>
+						<label><input type="radio" name="isInnerNet" value="1"/>内网</label>
+						<label><input type="radio" name="isInnerNet" value="2"/>外网</label>
+					</div>
+				</div>
+				<div>
+					<input type="button" value="保存" onclick="saveLoginConfirm()" /> 
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

@@ -163,6 +163,8 @@ public class UploadFileController
         file.setFilePath(filePath);
         file.setFileSeriaLength(Long.parseLong(fileSize));
         file.setState(State.ENABLE.getValue());
+        file.setFileCompleteTime(new Date());
+        file.setFileCreateTime(new Date());
         attachmentDao.createAttachmentByVO(file);
         return fileID;
     }
@@ -174,7 +176,7 @@ public class UploadFileController
         String fileName = httpServletRequest.getParameter("fileName");
         String fileId = UUID.randomUUID().toString().replace("-", "")
                         + ProjectConstant.ATTACHMENTID_SUFFIX;
-        attachmentDao.createAttachment(fileId, fileName,State.ENABLE.getValue());
+        attachmentDao.createAttachment(fileId, fileName,State.ENABLE.getValue(),new Date());
         Map<String, String> result = new HashMap<String, String>();
         result.put("fileId", fileId);
         return result;
@@ -206,6 +208,7 @@ public class UploadFileController
         attachmentPart.setFileId(fileId);
         attachmentPart.setFileSeria(Integer.parseInt(fileSeria));
         attachmentPart.setFileContentPart(fileContentPart);
+        attachmentPart.setFileCreateTime(new Date());
         attachmentPartDao.createAttachmentPart(attachmentPart);
         if (Boolean.toString(false).equals(fileComplete))
         {
@@ -253,7 +256,7 @@ public class UploadFileController
             outputStream.write(b);
             outputStream.flush();
             outputStream.close();
-            attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), filePath);
+            attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), filePath,new Date());
             result.put("fileComplete", Boolean.toString(true));
             result.put("filePath", myFileName);
             int filePartCount = attachmentPartDao.getPartCount4Att(fileId);

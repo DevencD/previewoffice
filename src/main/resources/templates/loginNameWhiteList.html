@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>用户白名单</title>
+<script src="templates/jquery.js"></script>
+<script type="text/javascript">
+	function init() {
+		assembleTable();
+	}
+
+	function assembleTable() {
+		$
+				.ajax({
+					type : "GET",
+					url : location.origin + "/getWhiteList",
+					contentType : "application/json",
+					dataType : "json",
+					success : function(data) {
+						var whiteList = data.result;
+						var count = whiteList.length;
+						var columns = 6;
+						var rows = Math.ceil(count / columns);
+						var index = 0;
+						var table = "<table>";
+						table += "<caption>白名单人员</br><input type='button' value='新 增'  onclick='addLoginName()'/></caption>";
+						table += "<tbody>";
+						for(var i = 0 ; i < rows ;i++){
+							table += "<tr>";
+							for(var j = 0;j<columns;j++){
+								table += "<td>" + whiteList[index] + "</td>";
+								index ++;
+								if(index == count) break;
+							}
+							table += "</tr>";
+						}
+						
+						table += "</tbody></table>";
+						document.getElementById("div1").style.display = "block";
+						document.getElementById("table1").innerHTML = table;
+					}
+				});
+	}
+
+	var addLoginName = function() {
+		document.getElementById("loginName").style.display = "block";
+	}
+
+	var saveLoginName = function() {
+		var name = $("#name").val();
+		$.ajax({
+			type : "GET",
+			url : location.origin + "/saveLoginName",
+			contentType : "application/json",
+			dataType : "json",
+			data : {
+				loginName : name
+			},
+			success : function(data) {
+				assembleTable();
+				cancelLoginName();
+			}
+		});
+	}
+
+	var cancelLoginName = function() {
+		document.getElementById("loginName").style.display = "none";
+		$("#ddid").val("");
+		$("#name").val("");
+	}
+</script>
+<style>
+table {
+	margin: auto;
+	width: 60%;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+table caption {
+	color: blue;
+	font: 34px consolas bold;
+}
+
+table th, table td {
+	border: 1px solid black;
+	text-align: center;
+}
+
+table th {
+	font: 20px consolas bold;
+	background-color: gray;
+}
+
+table tr:nth-child(n+2) {
+	background-color: cyan;
+}
+
+table tr:nth-child(2n+2) {
+	background-color: white;
+}
+
+.label {
+	float: left;
+	width: 100px;
+}
+</style>
+</head>
+
+<body onload="init()">
+	<div>
+		<div id="div1" style="display: none">
+			<div id="table1"></div>
+		</div>
+		<form id="loginName" style="display: none">
+			<div>
+				<div>
+					<input id="loginNameID" type="hidden" />
+				</div>
+				<div>
+					<div class='label'>
+						<span>姓名  / 云之家账号</span>
+					</div>
+					<div class='inputValue'>
+						<input type="text" id="name" />
+					</div>
+				</div>
+				<div>
+					<input type="button" value="保存" onclick="saveLoginName()" /> 
+					<input type="button" value="取消" onclick="cancelLoginName()" />
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

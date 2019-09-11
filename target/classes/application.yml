@@ -44,7 +44,7 @@ server:
 
 logging:
     level:
-        com.threefivework.mymall.dao.mapper: DEBUG
+        com.threefivework.mymall.dao.mapper: error
 # Mybatis config
 mybatis:
     configuration:

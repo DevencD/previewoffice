@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 映射文件，映射到对应的SQL接口 -->
+<mapper namespace="previewoffice.mapper.ILoginNameWhiteListMapper">
+	
+	<!-- 查询数据 -->
+	<!-- 入参定义：在接口定义中使用@Param注解(单参/多参都可使用) -->
+	<!-- 语句末尾不能有分号：ORA-00911: invalid character -->
+
+    <resultMap id="LoginName" type="previewoffice.vo.LoginNameVO">
+        <id property="id" column="ID"/>
+        <result property="name" column="name"/>
+        <result property="yzjAccount" column="yzj_account"/>
+        <result property="isInnerNet" column="is_inner_net"/>
+        <result property="ipAddress" column="ip_address"/>
+    </resultMap>
+    
+    <insert id="createByName" parameterType="previewoffice.vo.LoginNameVO">
+    	insert into T_LoginNameWhiteList (id,name) values(#{loginName.id},#{loginName.name})
+    </insert>
+    
+    <insert id="createLoginName" parameterType="previewoffice.vo.LoginNameVO">
+    	insert into T_LoginNameWhiteList (id,name,is_inner_net,ip_address) values(#{loginName.id},#{loginName.name},#{loginName.isInnerNet},#{loginName.ipAddress})
+    </insert>
+    
+    <insert id="createByYzjAccount" parameterType="previewoffice.vo.LoginNameVO">
+    	insert into T_LoginNameWhiteList (id,yzj_account) values(#{loginAccount.id},#{loginAccount.yzjAccount})
+    </insert>
+    
+    <update id="confirmLoginName" parameterType="previewoffice.vo.LoginNameVO" >
+    	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress} where name = #{login.name} and ip_address is null
+    </update>
+    
+    <select id="getAllLoginNameWhiteList" resultType="string">
+    	select distinct name from T_LoginNameWhiteList
+    </select>
+    
+    <select id="getLoginNameByLoginIP" resultType="string" parameterType="string">
+    	select name from T_LoginNameWhiteList where ip_address = #{loginIP}
+    </select>
+    
+    <select id="isExistLoginIPWhiteList" parameterType="string" resultType="int">
+    	select count(1) from T_LoginNameWhiteList where ip_address = #{loginIP}
+    </select>
+    
+    <select id="isExistLoginNameWhiteList" parameterType="string" resultType="int">
+    	select count(1) from T_LoginNameWhiteList where name = #{loginName}
+    </select>
+    
+    <select id="isExistLoginNameConfirm" parameterType="string" resultType="int">
+    	select count(1) from T_LoginNameWhiteList where name = #{loginName} and ip_address is null
+    </select>
+    
+    <delete id="deleteLoginName" parameterType="string" >
+    	delete T_LoginNameWhiteList where id = #{id}
+    </delete>
+</mapper>

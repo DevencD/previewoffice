@@ -6,11 +6,15 @@ public class OperRecordVO
 {
     private String id;
     
+    private String operUser;
+    
     private String operIP;
     
     private Date operTime;
     
     private int operType;
+    
+    private String operTypeDesc;
 
     public String getId()
     {
@@ -20,6 +24,16 @@ public class OperRecordVO
     public void setId(String id)
     {
         this.id = id;
+    }
+    
+    public String getOperUser()
+    {
+        return operUser;
+    }
+
+    public void setOperUser(String operUser)
+    {
+        this.operUser = operUser;
     }
 
     public String getOperIP()
@@ -50,6 +64,16 @@ public class OperRecordVO
     public void setOperType(int operType)
     {
         this.operType = operType;
+    }
+
+    public String getOperTypeDesc()
+    {
+        return operTypeDesc;
+    }
+
+    public void setOperTypeDesc(String operTypeDesc)
+    {
+        this.operTypeDesc = operTypeDesc;
     }
     
     

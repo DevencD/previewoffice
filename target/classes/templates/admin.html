@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>管理员页面</title>
+<script src="templates/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+    $(".main_left li").on("click",function(){
+        var address =$(this).attr("data-src");
+        $("iframe").attr("src",location.origin + '/' +address);
+    });
+});
+</script>
+<style>
+.main_left{
+    width: 150px;
+    height: 100%;
+    float:left;
+    background:#c0c0c0;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+<div class="container" style="height: 800px">
+		<!-- 左侧导航 -->
+      <div class="main_left" style="height:100px">
+          <ul>
+              <li data-src="operRecord">操作记录</li>
+              <li data-src="loginwhiteList">登录白名单</li>
+              <li data-src="ddlist">数据字典</li>
+          </ul>
+      </div>
+		<!-- 右侧内容 -->
+      <div class="main_right" style="height: 100%">
+          <iframe frameborder="0" scrolling="yes" style="width:80%;height:100%" src="operRecord" id="aa"></iframe>
+      </div>
+</div>
+</body>
+</html>

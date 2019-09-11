@@ -6,7 +6,7 @@ public enum OperType {
     DELETE("删除",2),
     MODIFY("修改",3),
     DOWNLOAD("下载",4),
-    PREVIEW("预览",4);
+    PREVIEW("预览",5);
     
     
     private String alias;
