@@ -4,6 +4,154 @@ soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwi
 
 
 
+create tablespace devenc_tablespace datafile '/u01/app/oracle/oradata/XE/devenc.dbf' size 1024M --存储地址 初始大小1G
+autoextend on next 10M maxsize unlimited   --每次扩展10M，无限制扩展
+EXTENT MANAGEMENT local  autoallocate
+segment space management auto;
+
+
+create user devenc identified by devenc
+default tablespace devenc_tablespace
+temporary tablespace TEMP
+profile DEFAULT;
+
+grant dba,connect, resource to devenc;
+
+create table T_DEMO_SNAME
+(FID varchar2(64) primary key,
+FNAME varchar2(255),
+FNUMBER varchar2(255),
+FCREATE_TIME date);
+
+
+select  t.fid ,t.fname,t.fnumber from T_DEMO_SNAME t where fname like '%EMP-972%'
+
+update T_DEMO_SNAME set fname= null where fname like '%EMP-972%'
+select * from T_DEMO_SNAME  for update
+select * from T_DEMO_SNAME order by fcreate_time desc
+
+delete from T_DEMO_SNAME where fname like 'EMP%'
+
+
+select * from v$version
+
+
+select count(1) from T_DEMO_SNAME where fname = 'EMP-0'
+
+insert into T_DEMO_SNAME (FID,FNAME,FNUMBER,FCREATE_TIME) values('47e1a0e3d9e64b74af5ee26b761a47e3','EMP-0','2019-04-23 10:04:590',SYSDATE)
+
+select * from T_DEMO_SNAME where fid = '47e1a0e3d9e64b74af5ee26b761a47e3'
+
+
+truncate table T_DEMO_SNAME
+
+
+-- 查看所有表空间的数据使用情况
+SELECT 
+      Upper(F.TABLESPACE_NAME) --as "表空间名",
+       ,D.TOT_GROOTTE_MB --as "表空间大小(M)",
+       ,D.TOT_GROOTTE_MB - F.TOTAL_BYTES --"已使用空间(M)",
+       ,To_char(Round(( D.TOT_GROOTTE_MB - F.TOTAL_BYTES ) / D.TOT_GROOTTE_MB * 100, 2), '990.99')
+       || '%'                           --"使用比",
+       ,F.TOTAL_BYTES as --"空闲空间(M)",
+       ,F.MAX_BYTES as --"最大块(M)"
+       
+FROM   (SELECT TABLESPACE_NAME,
+               Round(Sum(BYTES) / ( 1024 * 1024 ), 2) TOTAL_BYTES,
+               Round(Max(BYTES) / ( 1024 * 1024 ), 2) MAX_BYTES
+        FROM   SYS.DBA_FREE_SPACE
+        GROUP  BY TABLESPACE_NAME) F,
+       (SELECT DD.TABLESPACE_NAME,
+               Round(Sum(DD.BYTENO SYSTEM SYSTEM SYSTEM S DD
+        GROUP  BY DD.TABLESPACE_NAME) D
+WHERE  D.TABLESPACE_NAME = F.TABLESPACE_NAME
+ORDER  BY 1
+
+
+create table T_DEMO_SNAME
+(FID varchar2(64) primary key,
+FNAME varchar2(255),
+FNUMBER varchar2(255),
+FCREATE_TIME date);
+
+
+create table T_HR_SFixAdjustSalary
+(FID varchar2(64) primary key,
+FMoney varchar2(255),
+FEffectDat Date,
+FCmpItemID varchar2(64),
+FPersonID varchar2(64),
+FCREATE_TIME date);
+
+select b.* from (
+select tmp.* from (select count(t.fpersonid) count,t.fpersonid,t.fcmpitemid,t.feffectdat,t.fmoney from T_HR_SFixAdjustSalary t group by t.fpersonid,t.fcmpitemid,t.feffectdat,t.fmoney) tmp where tmp.count>1) a
+inner join T_HR_SFixAdjustSalary b on a.fpersonid = b.fpersonid and a.fcmpitemid = b.fcmpitemid and a.feffectdat = b.feffectdat
+
+select * from T_HR_SFixAdjustSalary
+
+
+
+create table T_HR_SocBaseData
+(
+PERSONNAME varchar2(255),
+SOCITEMNAME varchar2(64),
+FEFFECTDAY Date ,
+SOCTYPENAME varchar2(64),
+fNUMBER int);
+
+select count(*) from T_HR_SocBaseData
+select * from T_HR_SocBaseData order by fnumber desc
+
+drop table T_HR_SocBaseData
+truncate table T_HR_SocBaseData
+
+
+
+create table T_HR_SocBaseData_NEW
+(
+PERSONID varchar2(255),
+PERSONNUMBER varchar2(255),
+PERSONNAME varchar2(255),
+SOCITEMNAME varchar2(255),
+FEFFECTDAY Date ,
+SOCTYPENAME varchar2(255),
+ROWNUMBER int);
+truncate table T_HR_SocBaseData_NEW
+
+select * from T_HR_SocBaseData_NEW order by  rownumber
+
+select count(1) from (select distinct personnumber from T_HR_SocBaseData_NEW)
+select count(1) from (select distinct personname from T_HR_SocBaseData_NEW)
+select count(1) from (select distinct personid from T_HR_SocBaseData_NEW)
+
+select count(1) from (select distinct FEFFECTDAY from T_HR_SocBaseData_NEW)
+
+
+
+select personNumber,socItemname,feffectday,soctypename from T_HR_SocBaseData_NEW order by personNumber,socItemname,feffectday desc,soctypename
+
+select socItemname,FEFFECTDAY,soctypename,rownumber from T_HR_SocBaseData_NEW where personnumber = '32001762' order by socItemname,feffectday desc,soctypename
+
+
+select * from T_HR_SocBaseData_NEW where personnumber= '32001762'
+
+
+
+select personNumber,personName,socItemname,feffectday,soctypename,rowNumber from T_HR_SocBaseData_NEW order by personNumber,socItemname,feffectday,soctypename
+
+
+
+
+
+
+create table T_DataDictionary
+(
+id int primary key,
+key varchar(255),
+value varchar(255),
+description varchar(255)
+);
+
 select t.key,t.value from T_DataDictionary t where t.key;
 insert into T_DataDictionary(id,key,value,description)values(2,'openofficeIP','192.168.182.128',null)
 insert into T_DataDictionary(id,key,value,description)values(3,'openofficePort','8100',null);
@@ -22,7 +170,7 @@ select ID,KEY,VALUE,DESCRIPTION from T_DataDictionary where ID = 2
 
 select value from T_DataDictionary where KEY = 'openofficeIP'
 
-update T_DataDictionary set value = '127.0.0.1' where id = 2
+update T_DataDictionary set value = '1500' where id = 4;
 commit;
 
 create table T_DataDictionary
@@ -59,12 +207,17 @@ create table T_Attachment_part
 alter table T_Attachment_part add state int;
 update T_Attachment_part set state = 1 ;
 drop table T_Attachment
-select * from T_Attachment_part where file_id = '' order by file_seria
+select count(*) from T_Attachment_part where file_id = '5fec3b52e50f4a1c99419a8bb4026cafATTACHMENTID' order by file_seria
 select sysdate  from dual
-select* from T_Attachment order by file_create_time
+select* from T_Attachment order by file_create_time desc
 delete from T_Attachment;
 delete from T_Attachment_part;
 
+select * from T_Attachment_part
+commit;
+
+select userenv('language') from dual;
+drop table T_OperRecord;
 
 create table T_OperRecord
 (
@@ -73,3 +226,26 @@ oper_IP varchar(255),
 oper_time timestamp,
 oper_type int
 );
+
+create table T_LoginNameWhiteList
+(
+id varchar(60) primary key,
+name varchar(255),
+yzj_account varchar(255),
+is_inner_net varchar(255),
+ip_address varchar(255)
+);
+
+select * from T_OperRecord order by oper_time desc
+alter table T_OperRecord add oper_user varchar(255)
+select * from T_LoginNameWhiteList
+
+update T_LoginNameWhiteList set is_inner_net = null,ip_address=null where id = '306da81d7ca541b0a1339813b5ae9898LOGINNAMEWHITELISTID'
+delete from T_LoginNameWhiteList where name is null
+delete from T_LoginNameWhiteList where id = '24b835c234384c8183cfd37f203b9c89LOGINNAMEWHITELISTID'
+insert into T_LoginNameWhiteList(id,name)values('24b835c234384c8183cfd37f203b9c89LOGINNAMEWHITELISTID','devenc_dong')
+
+select * from(
+select name from T_LoginNameWhiteList
+    	union
+    	select yzj_account from T_LoginNameWhiteList)
