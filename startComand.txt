@@ -238,6 +238,7 @@ ip_address varchar(255)
 
 select * from T_OperRecord order by oper_time desc
 alter table T_OperRecord add oper_user varchar(255)
+alter table T_OperRecord add oper_type_desc varchar(255)
 select * from T_LoginNameWhiteList
 
 update T_LoginNameWhiteList set is_inner_net = null,ip_address=null where id = '306da81d7ca541b0a1339813b5ae9898LOGINNAMEWHITELISTID'

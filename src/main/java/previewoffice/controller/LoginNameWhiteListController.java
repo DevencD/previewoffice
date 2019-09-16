@@ -38,11 +38,17 @@ public class LoginNameWhiteListController
     public void createWLByName(HttpServletRequest httpServletRequest)
     {
         String loginName = httpServletRequest.getParameter("loginName");
+        int nameOryzj = Integer.parseInt(httpServletRequest.getParameter("nameOryzj"));
         LoginNameVO loginNameVO = new LoginNameVO();
-        loginNameVO.setName(loginName);
         loginNameVO.setId(UUID.randomUUID().toString().replace("-", "")
             + ProjectConstant.LOGINNAMEWHITELISTID_SUFFIX);
-        loginWhiteList.createByName(loginNameVO);
+        if(1== nameOryzj) {
+            loginNameVO.setName(loginName);
+            loginWhiteList.createByName(loginNameVO);
+        }else if(2 == nameOryzj) {
+            loginNameVO.setYzjAccount(loginName);
+            loginWhiteList.createByYzjAccount(loginNameVO);
+        }
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/confirmLoginName")
@@ -52,24 +58,48 @@ public class LoginNameWhiteListController
         Map<String, String> result = new HashMap<String, String>();
         String loginName = httpServletRequest.getParameter("loginName");
         int isInnerNet = Integer.parseInt(httpServletRequest.getParameter("isInnerNet"));
-        int isExistLoginName = loginWhiteList.isExistLoginNameWhiteList(loginName);
-        if(isExistLoginName < 1) {
-            result.put("message", "姓名或者云之家账号不正确，或者联系管理员添加！");
-            result.put("result", Boolean.FALSE.toString());
-        }else {
-            result.put("result", Boolean.TRUE.toString());
-            LoginNameVO login = new  LoginNameVO();
-            String loginIp = IpUtil.getIpAddr(httpServletRequest);
-            login.setIpAddress(loginIp);
-            login.setIsInnerNet(isInnerNet);
-            login.setName(loginName);
-            int isExistLoginNameConfirm = loginWhiteList.isExistLoginNameConfirm(loginName);
-            if(isExistLoginNameConfirm<1) {
-                login.setId(UUID.randomUUID().toString().replace("-", "")
-            + ProjectConstant.LOGINNAMEWHITELISTID_SUFFIX);
-                loginWhiteList.createLoginName(login);
+        int nameOryzj = Integer.parseInt(httpServletRequest.getParameter("nameOryzj"));
+        if(1== nameOryzj) {
+            int isExistLoginName = loginWhiteList.isExistLoginNameWhiteList(loginName);
+            if(isExistLoginName < 1) {
+                result.put("message", "姓名或者云之家账号不正确，或者联系管理员添加！");
+                result.put("result", Boolean.FALSE.toString());
             }else {
-                loginWhiteList.confirmLoginName(login);
+                result.put("result", Boolean.TRUE.toString());
+                LoginNameVO login = new  LoginNameVO();
+                String loginIp = IpUtil.getIpAddr(httpServletRequest);
+                login.setIpAddress(loginIp);
+                login.setIsInnerNet(isInnerNet);
+                login.setName(loginName);
+                int isExistLoginNameConfirm = loginWhiteList.isExistLoginNameConfirm(loginName);
+                if(isExistLoginNameConfirm<1) {
+                    login.setId(UUID.randomUUID().toString().replace("-", "")
+                        + ProjectConstant.LOGINNAMEWHITELISTID_SUFFIX);
+                    loginWhiteList.createLoginName(login);
+                }else {
+                    loginWhiteList.confirmLoginName(login);
+                }
+            }
+        }else if(2 == nameOryzj) {
+            int isExistLoginName = loginWhiteList.isExistLoginYzjWhiteList(loginName);
+            if(isExistLoginName < 1) {
+                result.put("message", "姓名或者云之家账号不正确，或者联系管理员添加！");
+                result.put("result", Boolean.FALSE.toString());
+            }else {
+                result.put("result", Boolean.TRUE.toString());
+                LoginNameVO login = new  LoginNameVO();
+                String loginIp = IpUtil.getIpAddr(httpServletRequest);
+                login.setIpAddress(loginIp);
+                login.setIsInnerNet(isInnerNet);
+                login.setYzjAccount(loginName);
+                int isExistLoginYzjConfirm = loginWhiteList.isExistLoginYzjConfirm(loginName);
+                if(isExistLoginYzjConfirm<1) {
+                    login.setId(UUID.randomUUID().toString().replace("-", "")
+                        + ProjectConstant.LOGINNAMEWHITELISTID_SUFFIX);
+                    loginWhiteList.createLoginYzj(login);
+                }else {
+                    loginWhiteList.confirmLoginYzj(login);
+                }
             }
         }
         return result;

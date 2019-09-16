@@ -48,13 +48,15 @@
 
 	var saveLoginName = function() {
 		var name = $("#name").val();
+		var nameOryzj = $("input[name='nameOryzj']:checked").val();
 		$.ajax({
 			type : "GET",
 			url : location.origin + "/saveLoginName",
 			contentType : "application/json",
 			dataType : "json",
 			data : {
-				loginName : name
+				loginName : name,
+				nameOryzj: nameOryzj
 			},
 			success : function(data) {
 				assembleTable();
@@ -102,7 +104,7 @@ table tr:nth-child(2n+2) {
 
 .label {
 	float: left;
-	width: 100px;
+	width: 150px;
 }
 </style>
 </head>
@@ -123,6 +125,13 @@ table tr:nth-child(2n+2) {
 					</div>
 					<div class='inputValue'>
 						<input type="text" id="name" />
+					</div>
+					<div class='label'>
+						<span>姓名  / 云之家账号</span>
+					</div>
+					<div class='inputValue'>
+						<label><input type="radio" name="nameOryzj" value="1"/>姓名</label>
+						<label><input type="radio" name="nameOryzj" value="2"/>云之家</label>
 					</div>
 				</div>
 				<div>

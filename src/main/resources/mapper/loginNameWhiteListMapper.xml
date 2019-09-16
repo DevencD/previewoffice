@@ -23,6 +23,10 @@
     	insert into T_LoginNameWhiteList (id,name,is_inner_net,ip_address) values(#{loginName.id},#{loginName.name},#{loginName.isInnerNet},#{loginName.ipAddress})
     </insert>
     
+    <insert id="createLoginYzj" parameterType="previewoffice.vo.LoginNameVO">
+    	insert into T_LoginNameWhiteList (id,yzj_account,is_inner_net,ip_address) values(#{loginName.id},#{loginName.yzjAccount},#{loginName.isInnerNet},#{loginName.ipAddress})
+    </insert>
+    
     <insert id="createByYzjAccount" parameterType="previewoffice.vo.LoginNameVO">
     	insert into T_LoginNameWhiteList (id,yzj_account) values(#{loginAccount.id},#{loginAccount.yzjAccount})
     </insert>
@@ -31,12 +35,18 @@
     	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress} where name = #{login.name} and ip_address is null
     </update>
     
+    <update id="confirmLoginYzj" parameterType="previewoffice.vo.LoginNameVO" >
+    	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress} where yzj_account = #{login.yzjAccount} and ip_address is null
+    </update>
+    
     <select id="getAllLoginNameWhiteList" resultType="string">
-    	select distinct name from T_LoginNameWhiteList
+    	select distinct name from T_LoginNameWhiteList where name is not null
+    	union
+    	select distinct yzj_account from T_LoginNameWhiteList where yzj_account is not null
     </select>
     
     <select id="getLoginNameByLoginIP" resultType="string" parameterType="string">
-    	select name from T_LoginNameWhiteList where ip_address = #{loginIP}
+    	select name || yzj_account from T_LoginNameWhiteList where ip_address = #{loginIP}
     </select>
     
     <select id="isExistLoginIPWhiteList" parameterType="string" resultType="int">
@@ -49,6 +59,14 @@
     
     <select id="isExistLoginNameConfirm" parameterType="string" resultType="int">
     	select count(1) from T_LoginNameWhiteList where name = #{loginName} and ip_address is null
+    </select>
+    
+    <select id="isExistLoginYzjWhiteList" parameterType="string" resultType="int">
+    	select count(1) from T_LoginNameWhiteList where yzj_account = #{yzj}
+    </select>
+    
+    <select id="isExistLoginYzjConfirm" parameterType="string" resultType="int">
+    	select count(1) from T_LoginNameWhiteList where yzj_account = #{yzj} and ip_address is null
     </select>
     
     <delete id="deleteLoginName" parameterType="string" >

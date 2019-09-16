@@ -8,8 +8,9 @@
 
 	var saveLoginConfirm = function() {
 		var name = $("#name").val();
+		var nameOryzj = $("input[name='nameOryzj']:checked").val();
 		var isInnerNet = $("input[name='isInnerNet']:checked").val();
-		if(!name || !isInnerNet){
+		if(!name || !isInnerNet || !nameOryzj){
 			alert("请输入姓名或者云之家账号，并选择内网还是外网！！");
 			return;
 		}
@@ -20,7 +21,8 @@
 			dataType : "json",
 			data : {
 				loginName : name,
-				isInnerNet: isInnerNet
+				isInnerNet: isInnerNet,
+				nameOryzj: nameOryzj
 			},
 			success : function(data) {
 				if(data.result== "true"){
@@ -67,7 +69,7 @@ table tr:nth-child(2n+2) {
 
 .label {
 	float: left;
-	width: 100px;
+	width: 150px;
 }
 </style>
 </head>
@@ -85,6 +87,13 @@ table tr:nth-child(2n+2) {
 					</div>
 					<div class='inputValue'>
 						<input type="text" id="name" />
+					</div>
+					<div class='label'>
+						<span>姓名  / 云之家账号</span>
+					</div>
+					<div class='inputValue'>
+						<label><input type="radio" name="nameOryzj" value="1"/>姓名</label>
+						<label><input type="radio" name="nameOryzj" value="2"/>云之家</label>
 					</div>
 					<div class='label'>
 						<span>内网  / 外网</span>

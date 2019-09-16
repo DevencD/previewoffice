@@ -24,11 +24,16 @@ public class LoginInterceptor implements HandlerInterceptor
         throws Exception
     {
         String uri = request.getRequestURI();
-        if(uri.contains("loginconfirm") || uri.contains("confirmLoginName")) {
-            return true;
-        }
         String loginIP = IpUtil.getIpAddr(request);
         int isExistLoginIP = loginWhitelist.isExistLoginIPWhiteList(loginIP);
+        if(uri.contains("loginconfirm") || uri.contains("confirmLoginName")) {
+            if(isExistLoginIP < 1) {
+                return true;
+            }else {
+                response.sendRedirect("/index");
+                return false;
+            }
+        }
         if(isExistLoginIP < 1) {
             response.sendRedirect("/loginconfirm");
             return false;

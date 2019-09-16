@@ -38,6 +38,7 @@ public class OperRecordServiceImpl implements IOperRecordService
         record.setOperTime(new Date());
         String operUser = loginNameWhiteList.getLoginNameByLoginIP(loginIP);
         record.setOperUser(operUser);
+        record.setOperTypeDesc(OperType.getAlias(operType));
         operRecordDao.createOperRecordByVO(record);
 
     }
