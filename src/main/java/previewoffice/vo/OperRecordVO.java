@@ -15,6 +15,8 @@ public class OperRecordVO
     private int operType;
     
     private String operTypeDesc;
+    
+    private String bizObjID;
 
     public String getId()
     {
@@ -76,6 +78,14 @@ public class OperRecordVO
         this.operTypeDesc = operTypeDesc;
     }
     
+    public void setBizObjID(String bizObjID)
+    {
+        this.bizObjID = bizObjID;
+    }
     
+    public String getBizObjID()
+    {
+        return bizObjID;
+    }
 
 }

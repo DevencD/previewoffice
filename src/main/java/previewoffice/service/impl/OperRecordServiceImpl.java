@@ -27,7 +27,7 @@ public class OperRecordServiceImpl implements IOperRecordService
     private ILoginNameWhiteListMapper loginNameWhiteList;
 
     @Override
-    public void recordOper(HttpServletRequest request, int operType)
+    public void recordOper(HttpServletRequest request, int operType,String bizObjID)
     {
         OperRecordVO record = new OperRecordVO();
         record.setId(UUID.randomUUID().toString().replace("-", "")
@@ -39,6 +39,7 @@ public class OperRecordServiceImpl implements IOperRecordService
         String operUser = loginNameWhiteList.getLoginNameByLoginIP(loginIP);
         record.setOperUser(operUser);
         record.setOperTypeDesc(OperType.getAlias(operType));
+        record.setBizObjID(bizObjID);
         operRecordDao.createOperRecordByVO(record);
 
     }

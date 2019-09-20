@@ -66,7 +66,6 @@ public class UploadFileController
     @GetMapping("/deleteAtt")
     public String deleteAttachment(HttpServletRequest httpServletRequest)
     {
-        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue());
         String fileId = httpServletRequest.getParameter("fileId");
         AttachmentVO attachment = attachmentDao.getFileById(fileId);
         String filePath = attachment.getFilePath();
@@ -78,6 +77,7 @@ public class UploadFileController
 //                file.delete();
             }
         }
+        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue(),fileId);
         attachmentDao.deleteAttachmentById(fileId);
         attachmentPartDao.deleteAttachmentPartByFileId(fileId);
         return null;
@@ -88,7 +88,6 @@ public class UploadFileController
                                      HttpServletResponse response)
         throws UnsupportedEncodingException
     {
-        recordOper.recordOper(httpServletRequest, OperType.DOWNLOAD.getValue());
         String fileId = httpServletRequest.getParameter("fileId");
         if (StringUtils.isEmpty(fileId))
         {
@@ -96,6 +95,7 @@ public class UploadFileController
         }
         else
         {
+            recordOper.recordOper(httpServletRequest, OperType.DOWNLOAD.getValue(),fileId);
             AttachmentVO attachment = attachmentDao.getFileById(fileId);
             if (null != attachment)
             {
@@ -149,7 +149,6 @@ public class UploadFileController
     public String upload(HttpServletRequest httpServletRequest)
         throws Exception
     {
-        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue());
         List<Map<String,String>> list = UploadActionUtil.uploadFile(httpServletRequest);
         Map<String,String> oneFile = list.get(0);
         String fileName = oneFile.get("fileName");
@@ -166,19 +165,20 @@ public class UploadFileController
         file.setFileCompleteTime(new Date());
         file.setFileCreateTime(new Date());
         attachmentDao.createAttachmentByVO(file);
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(),fileID);
         return fileID;
     }
 
     @GetMapping("/transfer/getFileId")
     public Map<String, String> getFileID(HttpServletRequest httpServletRequest)
     {
-        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue());
         String fileName = httpServletRequest.getParameter("fileName");
         String fileId = UUID.randomUUID().toString().replace("-", "")
                         + ProjectConstant.ATTACHMENTID_SUFFIX;
         attachmentDao.createAttachment(fileId, fileName,State.ENABLE.getValue(),new Date());
         Map<String, String> result = new HashMap<String, String>();
         result.put("fileId", fileId);
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(),fileId);
         return result;
     }
 

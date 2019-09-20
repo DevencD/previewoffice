@@ -14,6 +14,7 @@
         <result property="operType" column="oper_type"/>
         <result property="operUser" column="oper_user"/>
         <result property="operTypeDesc" column="oper_type_desc"/>
+        <result property="bizObjID" column="biz_obj_id"/>
     </resultMap>
 	<!-- 
     <select id="getDDByKey" parameterType="string"  resultType="previewoffice.vo.DataDictionaryVO" resultMap="DDVO">
@@ -32,7 +33,7 @@
     </select>
     
     <insert id="createOperRecordByVO" parameterType="previewoffice.vo.OperRecordVO">
-    	insert into T_OperRecord (id,oper_IP,oper_time,oper_type,oper_user,oper_type_desc) values(#{operRecord.id},#{operRecord.operIP},#{operRecord.operTime},#{operRecord.operType},#{operRecord.operUser},#{operRecord.operTypeDesc})
+    	insert into T_OperRecord (id,oper_IP,oper_time,oper_type,oper_user,oper_type_desc,biz_obj_id) values(#{operRecord.id},#{operRecord.operIP},#{operRecord.operTime},#{operRecord.operType},#{operRecord.operUser},#{operRecord.operTypeDesc},#{operRecord.bizObjID})
     </insert>
     
 </mapper>

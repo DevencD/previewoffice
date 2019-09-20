@@ -53,7 +53,6 @@ public class Office2HtmlController
     @ResponseBody
     public Map<String, String> office2PDF(HttpServletRequest httpServletRequest)
     {
-        recordOper.recordOper(httpServletRequest, OperType.PREVIEW.getValue());
         String fileID = httpServletRequest.getParameter("fileID");
         AttachmentVO file = attDao.getFileById(fileID);
         String filePath = file.getFilePath();
@@ -69,6 +68,7 @@ public class Office2HtmlController
         Map<String, String> result = new HashMap<String, String>();
         result.put("state", String.valueOf(state));
         result.put("file", fileName);
+        recordOper.recordOper(httpServletRequest, OperType.PREVIEW.getValue(),fileID);
         return result;
     }
 

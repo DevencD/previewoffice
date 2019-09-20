@@ -83,7 +83,6 @@ public class DataDictionaryController
     @ResponseBody
     public void updateDDVOByID(HttpServletRequest httpServletRequest)
     {
-        recordOper.recordOper(httpServletRequest, OperType.MODIFY.getValue());
         String ddID = httpServletRequest.getParameter("ddID");
         String ddKey = httpServletRequest.getParameter("ddKey");
         String ddValue = httpServletRequest.getParameter("ddValue");
@@ -94,22 +93,22 @@ public class DataDictionaryController
         dataDictionaryVO.setValue(ddValue);
         dataDictionaryVO.setDescription(ddDescription);
         dataDictionaryMapper.updateDD(dataDictionaryVO);
+        recordOper.recordOper(httpServletRequest, OperType.MODIFY.getValue(),ddID);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deleteDDVOByID")
     @ResponseBody
     public void deleteDDVOByID(HttpServletRequest httpServletRequest)
     {
-        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue());
         String ddID = httpServletRequest.getParameter("DDID");
         dataDictionaryMapper.deleteDDByID(ddID);
+        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue(),ddID);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/savedd")
     @ResponseBody
     public void createDD(HttpServletRequest httpServletRequest)
     {
-        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue());
         String ddID = httpServletRequest.getParameter("ddID");
         String ddKey = httpServletRequest.getParameter("ddKey");
         String ddValue = httpServletRequest.getParameter("ddValue");
@@ -127,7 +126,7 @@ public class DataDictionaryController
         {
             dataDictionaryMapper.updateDD(dataDictionaryVO);
         }
-
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(),ddID);
     }
 
 }
