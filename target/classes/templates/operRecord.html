@@ -29,7 +29,7 @@
 									},
 									{
 										label:'操作人',
-										width:'30%'
+										width:'20%'
 									},
 									{
 										label:'操作环境IP',
@@ -37,17 +37,25 @@
 									},
 									{
 										label:'操作时间',
-										width:'30%'
+										width:'20%'
+									},
+									{
+										label:'operType',
+										width:0
 									},
 									{
 										label:'操作类型',
-										width:0
+										width:'10%'
+									},
+									{
+										label:'文件名称',
+										width:'20%'
 									}];
 						table += "<tr>";
 						for (var i = 0, size = str.length; i < size; i++) {
 							var label = str[i].label;
 							var widthSet = str[i].width;
-							if (label == 'ID' || label == 'state') {
+							if (label == 'ID' || label == 'operType') {
 								table += "<th style='display: none'>" + label
 										+ "</th>";
 							} else {
@@ -65,7 +73,7 @@
 							var id = "";
 							for ( var p in obj) {
 								var op = obj[p];
-								if (p == 'id' || p == 'state') {
+								if (p == 'id' || p == 'operType') {
 									table += "<td style='display: none'>";
 									if(p == 'id') id = op;
 								} else {

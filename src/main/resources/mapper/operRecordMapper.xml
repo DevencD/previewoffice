@@ -29,7 +29,18 @@
         select VALUE from T_DataDictionary where KEY = #{DDkey}
     </select> -->
     <select id="queryAll" resultType="previewoffice.vo.OperRecordVO" resultMap="OperRecord">
-    	select * from T_OperRecord order by oper_time desc
+    	select
+    		record.id as id,
+    		record.oper_user as oper_user,
+    		record.oper_ip as oper_IP,
+    		record.oper_time as oper_time,
+    		record.oper_type as oper_type,
+    		record.oper_type_desc as oper_type_desc,
+    		att.file_name as biz_obj_id
+    	from 
+    		T_OperRecord record 
+    		inner join T_Attachment att on record.biz_obj_id = att.id 
+    	order by oper_time desc
     </select>
     
     <insert id="createOperRecordByVO" parameterType="previewoffice.vo.OperRecordVO">
