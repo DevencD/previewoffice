@@ -26,19 +26,30 @@ public class LoginInterceptor implements HandlerInterceptor
         String uri = request.getRequestURI();
         String loginIP = IpUtil.getIpAddr(request);
         int isExistLoginIP = loginWhitelist.isExistLoginIPWhiteList(loginIP);
-        if(uri.contains("loginconfirm") || uri.contains("confirmLoginName")) {
+        if(uri.contains("loginconfirm") || uri.contains("confirmLoginName") || uri.contains("noPerm")) {
             if(isExistLoginIP < 1) {
                 return true;
             }else {
-                response.sendRedirect("/index");
-                return false;
+                int isExistLoginIPOn = loginWhitelist.isExistLoginIPWhiteListOn(loginIP);
+                if(isExistLoginIPOn > 0 && uri.contains("noPerm")) {
+                    return true;
+                } else {
+                    response.sendRedirect("/index");
+                    return false;
+                }
             }
         }
         if(isExistLoginIP < 1) {
             response.sendRedirect("/loginconfirm");
             return false;
         }else {
-            return true;
+            int isExistLoginIPOn = loginWhitelist.isExistLoginIPWhiteListOn(loginIP);
+            if(isExistLoginIPOn > 0) {
+                response.sendRedirect("/noPerm");
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 

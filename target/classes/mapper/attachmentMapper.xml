@@ -41,7 +41,11 @@
     </insert>
     
     <update id="updateComplete">
-    	update T_Attachment set file_seria_length = #{fileSeriaLength,jdbcType=INTEGER},file_path=#{filePath,jdbcType=VARCHAR},file_complete_time=#{fileCompleteTime} where id = #{fileID,jdbcType=VARCHAR}
+    	update T_Attachment set file_seria_length = #{fileSeriaLength,jdbcType=INTEGER},file_complete_time=#{fileCompleteTime} where id = #{fileID,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateFilePath">
+    	update T_Attachment set file_path=#{filePath,jdbcType=VARCHAR} where id = #{fileID,jdbcType=VARCHAR}
     </update>
     
     <select id="getFileNameById" parameterType="string" resultType="string">

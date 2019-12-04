@@ -12,6 +12,8 @@ public class LoginNameVO
     private int isInnerNet;
     
     private String ipAddress;
+    
+    private int state;
 
     public String getId()
     {
@@ -63,6 +65,13 @@ public class LoginNameVO
         this.ipAddress = ipAddress;
     }
     
-    
+    public int getState()
+    {
+        return state;
+    }
+    public void setState(int state)
+    {
+        this.state = state;
+    }
 
 }

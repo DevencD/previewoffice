@@ -19,18 +19,40 @@ import previewoffice.util.ProjectConstant;
 import previewoffice.vo.LoginNameVO;
 
 @Controller
+@RequestMapping("/whiteList/")
 public class LoginNameWhiteListController
 {
     @Autowired
     private ILoginNameWhiteListMapper loginWhiteList;
     
-    @RequestMapping(method = RequestMethod.GET, value = "/getWhiteList")
+    @RequestMapping(method = RequestMethod.GET, value = "/getAllName")
     @ResponseBody
     public Map<String, List<String>> getLoginNameWhiteList(HttpServletRequest httpServletRequest)
     {
         Map<String, List<String>> result = new HashMap<String, List<String>>();
         result.put("result", loginWhiteList.getAllLoginNameWhiteList());
         return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/getList")
+    @ResponseBody
+    public Map<String, List<LoginNameVO>> getLoginNameList(HttpServletRequest httpServletRequest)
+    {
+        Map<String, List<LoginNameVO>> result = new HashMap<String, List<LoginNameVO>>();
+        result.put("result", loginWhiteList.getLoginNameList());
+        return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/stateChange")
+    @ResponseBody
+    public void stateChange(HttpServletRequest httpServletRequest)
+    {
+        String id = httpServletRequest.getParameter("id");
+        String state = httpServletRequest.getParameter("state");
+        LoginNameVO login = new LoginNameVO();
+        login.setId(id);
+        login.setState(Integer.parseInt(state));
+        loginWhiteList.stateChange(login);;
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/saveLoginName")

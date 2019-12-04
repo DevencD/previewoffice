@@ -62,5 +62,10 @@ public class Index
     {
         return "operRecord";
     }
+    
+    @RequestMapping("/noPerm")
+    public String noPerm() {
+        return "noPerm";
+    }
 
 }

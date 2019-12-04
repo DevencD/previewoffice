@@ -35,5 +35,11 @@ public interface ILoginNameWhiteListMapper
     int isExistLoginYzjConfirm(@Param("yzj") String yzj);
     
     void deleteLoginName(@Param("id") String id);
+    
+    int isExistLoginIPWhiteListOn(@Param("loginIP") String loginIP);
+    
+    List<LoginNameVO> getLoginNameList();
+    
+    void stateChange(@Param("login") LoginNameVO login);
 
 }

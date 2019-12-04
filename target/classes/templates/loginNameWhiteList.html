@@ -13,25 +13,59 @@
 		$
 				.ajax({
 					type : "GET",
-					url : location.origin + "/getWhiteList",
+					url : location.origin + "/whiteList/getList",
 					contentType : "application/json",
 					dataType : "json",
 					success : function(data) {
 						var whiteList = data.result;
-						var count = whiteList.length;
-						var columns = 6;
-						var rows = Math.ceil(count / columns);
-						var index = 0;
 						var table = "<table>";
 						table += "<caption>白名单人员</br><input type='button' value='新 增'  onclick='addLoginName()'/></caption>";
 						table += "<tbody>";
-						for(var i = 0 ; i < rows ;i++){
-							table += "<tr>";
-							for(var j = 0;j<columns;j++){
-								table += "<td>" + whiteList[index] + "</td>";
-								index ++;
-								if(index == count) break;
+						//添加表头
+						var str = "ID,account,loginIP,操      作"
+								.split(",");
+						table += "<tr>";
+						for (var i = 0, size = str.length; i < size; i++) {
+							if (i == 0) {
+								table += "<th style='display: none'>" + str[i]
+										+ "</th>";
+							} else {
+								table += "<th>" + str[i] + "</th>";
 							}
+						}
+						table += "</tr>";
+						for (var i = 0, size = whiteList.length; i < size; i++) {
+							table += "<tr>";
+							var obj = whiteList[i];
+							var id = "", account = "", loginIp = "", state = "";
+							for ( var p in obj) {
+								var op = obj[p];
+								if (p == 'id') {
+									id = op;
+								}else if (p == 'name' || p == 'yzjAccount') {
+									if(!account){
+										account = op;
+									}
+								} else if (p == 'ipAddress') {
+									loginIp = op;
+								}else if (p == 'state') {
+									state = op;
+								}
+							}
+							table += "<td style='display: none'>" + id + "</td>";
+							table += "<td>" + account + "</td>";
+							table += "<td>" + loginIp + "</td>";
+							table += "<td style='display: none'>" + state + "</td>";
+							//<a href="javasctipt:void(0);" onclick="xxx.html?userid=zhangsan">
+							table += "<td>";
+							var oper = "禁用";
+							if(2 == state) {
+								oper = "启用";
+							}
+							table += "<a href='javasctipt:void(0)' onclick='stateChange(\""
+								+ id
+								+ "\",\"" + state + "\")'>" + oper  + "</a>";
+							table += "</td>";
 							table += "</tr>";
 						}
 						
@@ -40,6 +74,22 @@
 						document.getElementById("table1").innerHTML = table;
 					}
 				});
+	}
+	
+	var stateChange = function(id,state) {
+		$.ajax({
+			type : "GET",
+			url : location.origin + "/whiteList/stateChange",
+			contentType : "application/json",
+			dataType : "json",
+			data : {
+				id : id,
+				state: state == 1 ? 2: 1
+			},
+			success : function(data) {
+				assembleTable();
+			}
+		});
 	}
 
 	var addLoginName = function() {
@@ -51,7 +101,7 @@
 		var nameOryzj = $("input[name='nameOryzj']:checked").val();
 		$.ajax({
 			type : "GET",
-			url : location.origin + "/saveLoginName",
+			url : location.origin + "/whiteList/saveLoginName",
 			contentType : "application/json",
 			dataType : "json",
 			data : {

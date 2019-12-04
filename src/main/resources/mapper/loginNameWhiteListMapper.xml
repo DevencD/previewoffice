@@ -13,6 +13,7 @@
         <result property="yzjAccount" column="yzj_account"/>
         <result property="isInnerNet" column="is_inner_net"/>
         <result property="ipAddress" column="ip_address"/>
+        <result property="state" column="state"/>
     </resultMap>
     
     <insert id="createByName" parameterType="previewoffice.vo.LoginNameVO">
@@ -39,10 +40,18 @@
     	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress} where yzj_account = #{login.yzjAccount} and ip_address is null
     </update>
     
+    <update id="stateChange" parameterType="previewoffice.vo.LoginNameVO" >
+    	update T_LoginNameWhiteList set state = #{login.state} where id = #{login.id}
+    </update>
+    
     <select id="getAllLoginNameWhiteList" resultType="string">
     	select distinct name from T_LoginNameWhiteList where name is not null
     	union
     	select distinct yzj_account from T_LoginNameWhiteList where yzj_account is not null
+    </select>
+    
+    <select id="getLoginNameList" resultMap="LoginName">
+    	select * from T_LoginNameWhiteList
     </select>
     
     <select id="getLoginNameByLoginIP" resultType="string" parameterType="string">
@@ -51,6 +60,10 @@
     
     <select id="isExistLoginIPWhiteList" parameterType="string" resultType="int">
     	select count(1) from T_LoginNameWhiteList where ip_address = #{loginIP}
+    </select>
+    
+    <select id="isExistLoginIPWhiteListOn" parameterType="string" resultType="int">
+    	select count(1) from T_LoginNameWhiteList where ip_address = #{loginIP} and state = 2 
     </select>
     
     <select id="isExistLoginNameWhiteList" parameterType="string" resultType="int">

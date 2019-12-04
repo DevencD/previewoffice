@@ -51,7 +51,7 @@ public class UploadFileController
 
     @Autowired
     private IAttachementPartMapper attachmentPartDao;
-    
+
     @Autowired
     private IOperRecordService recordOper;
 
@@ -77,7 +77,7 @@ public class UploadFileController
 //                file.delete();
             }
         }
-        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue(),fileId);
+        recordOper.recordOper(httpServletRequest, OperType.DELETE.getValue(), fileId);
         attachmentDao.deleteAttachmentById(fileId);
         attachmentPartDao.deleteAttachmentPartByFileId(fileId);
         return null;
@@ -95,13 +95,76 @@ public class UploadFileController
         }
         else
         {
-            recordOper.recordOper(httpServletRequest, OperType.DOWNLOAD.getValue(),fileId);
+            recordOper.recordOper(httpServletRequest, OperType.DOWNLOAD.getValue(), fileId);
             AttachmentVO attachment = attachmentDao.getFileById(fileId);
             if (null != attachment)
             {
                 String fileName = attachment.getFileName();
                 String filePath = attachment.getFilePath();
-//                fileName = new String(fileName.getBytes("GBK"), "ISO-8859-1");
+                if (StringUtils.isEmpty(filePath))
+                {
+                    OutputStream outputStream = null;
+                    try
+                    {
+                        StringBuffer fileContent = new StringBuffer();
+                        List<AttachmentPartVO> attachmentParts = attachmentPartDao.getAttachementByFileID(
+                            fileId);
+                        for (int i = 0, size = attachmentParts.size(); i < size; i++ )
+                        {
+                            AttachmentPartVO attachmentPartVO = attachmentParts.get(i);
+                            fileContent.append(attachmentPartVO.getFileContentPart());
+                        }
+                        byte[] b = Base64.decodeBase64(fileContent.toString());
+                        for (int i = 0; i < b.length; i++ )
+                        {
+                            if (b[i] < 0)
+                            {
+                                b[i] += 256;
+                            }
+                        }
+                        // 取得当前上传文件的文件名称
+                        String myFileName = attachmentDao.getFileNameById(fileId);
+                        // 如果名称不为“”,说明该文件存在，否则说明该文件不存在
+                        if (myFileName.trim() != "")
+                        {
+                            String fileTyps = myFileName.substring(myFileName.lastIndexOf("."));
+//                      // String tempName="demo"+fileTyps;
+                            String tempName = UUID.randomUUID().toString() + fileTyps;
+                            // 创建文件夹
+                            String folderPath;
+                            folderPath = ProjectConstant.SAVEFILEPATH + File.separator
+                                         + folderName();
+
+                            File fileFolder = new File(folderPath);
+                            if (!fileFolder.exists() && !fileFolder.isDirectory())
+                            {
+                                fileFolder.mkdirs();
+                            }
+                            filePath = folderPath + File.separator + tempName;
+
+                        }
+                        outputStream = new FileOutputStream(filePath);
+                        outputStream.write(b);
+                        outputStream.flush();
+                        outputStream.close();
+                        attachmentDao.updateFilePath(fileId, filePath);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            if (null != outputStream) outputStream.close();
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 File file = new File(filePath);
                 if (file.exists())
                 {
@@ -109,7 +172,8 @@ public class UploadFileController
                     response.setContentType("application/x-download");
                     response.setCharacterEncoding("utf-8");
                     response.setContentLength((int)file.length());
-                    response.setHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode(fileName ,"UTF-8") + "\"");
+                    response.setHeader("Content-Disposition",
+                        "attachment;filename=\"" + URLEncoder.encode(fileName, "UTF-8") + "\"");
                     byte[] buff = new byte[1024];
                     BufferedInputStream bis = null;
                     BufferedOutputStream out = null;
@@ -149,13 +213,13 @@ public class UploadFileController
     public String upload(HttpServletRequest httpServletRequest)
         throws Exception
     {
-        List<Map<String,String>> list = UploadActionUtil.uploadFile(httpServletRequest);
-        Map<String,String> oneFile = list.get(0);
+        List<Map<String, String>> list = UploadActionUtil.uploadFile(httpServletRequest);
+        Map<String, String> oneFile = list.get(0);
         String fileName = oneFile.get("fileName");
         String filePath = oneFile.get("filePath");
         String fileSize = oneFile.get("fileSize");
         String fileID = UUID.randomUUID().toString().replace("-", "")
-            + ProjectConstant.ATTACHMENTID_SUFFIX;
+                        + ProjectConstant.ATTACHMENTID_SUFFIX;
         AttachmentVO file = new AttachmentVO();
         file.setId(fileID);
         file.setFileName(fileName);
@@ -165,7 +229,7 @@ public class UploadFileController
         file.setFileCompleteTime(new Date());
         file.setFileCreateTime(new Date());
         attachmentDao.createAttachmentByVO(file);
-        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(),fileID);
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(), fileID);
         return fileID;
     }
 
@@ -175,10 +239,10 @@ public class UploadFileController
         String fileName = httpServletRequest.getParameter("fileName");
         String fileId = UUID.randomUUID().toString().replace("-", "")
                         + ProjectConstant.ATTACHMENTID_SUFFIX;
-        attachmentDao.createAttachment(fileId, fileName,State.ENABLE.getValue(),new Date());
+        attachmentDao.createAttachment(fileId, fileName, State.ENABLE.getValue(), new Date());
         Map<String, String> result = new HashMap<String, String>();
         result.put("fileId", fileId);
-        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(),fileId);
+        recordOper.recordOper(httpServletRequest, OperType.CREATE.getValue(), fileId);
         return result;
     }
 
@@ -217,48 +281,9 @@ public class UploadFileController
         }
         else
         {
-            StringBuffer fileContent = new StringBuffer();
-            List<AttachmentPartVO> attachmentParts = attachmentPartDao.getAttachementByFileID(
-                fileId);
-            for (int i = 0, size = attachmentParts.size(); i < size; i++ )
-            {
-                AttachmentPartVO attachmentPartVO = attachmentParts.get(i);
-                fileContent.append(attachmentPartVO.getFileContentPart());
-            }
-            byte[] b = Base64.decodeBase64(fileContent.toString());
-            for (int i = 0; i < b.length; i++ )
-            {
-                if (b[i] < 0)
-                {
-                    b[i] += 256;
-                }
-            }
-            // 取得当前上传文件的文件名称
-            String myFileName = attachmentDao.getFileNameById(fileId);
-            // 如果名称不为“”,说明该文件存在，否则说明该文件不存在
-            String filePath = "";
-            if (myFileName.trim() != "")
-            {
-                String fileTyps = myFileName.substring(myFileName.lastIndexOf("."));
-//                // String tempName="demo"+fileTyps;
-                String tempName = UUID.randomUUID().toString() + fileTyps;
-                // 创建文件夹
-                String folderPath = ProjectConstant.SAVEFILEPATH + File.separator + folderName();
-                File fileFolder = new File(folderPath);
-                if (!fileFolder.exists() && !fileFolder.isDirectory())
-                {
-                    fileFolder.mkdirs();
-                }
-                filePath = folderPath + File.separator + tempName;
-
-            }
-            OutputStream outputStream = new FileOutputStream(filePath);
-            outputStream.write(b);
-            outputStream.flush();
-            outputStream.close();
-            attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), filePath,new Date());
+            attachmentDao.updateComplete(fileId, Integer.parseInt(fileSeria), new Date());
             result.put("fileComplete", Boolean.toString(true));
-            result.put("filePath", myFileName);
+//            result.put("filePath", myFileName);
             int filePartCount = attachmentPartDao.getPartCount4Att(fileId);
             result.put("filePartCount", filePartCount + "");
             result.put("maxFileSeria", fileSeria);
