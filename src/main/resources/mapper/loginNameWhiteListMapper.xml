@@ -33,11 +33,11 @@
     </insert>
     
     <update id="confirmLoginName" parameterType="previewoffice.vo.LoginNameVO" >
-    	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress} where name = #{login.name} and ip_address is null
+    	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress},state = 1 where name = #{login.name} and ip_address is null
     </update>
     
     <update id="confirmLoginYzj" parameterType="previewoffice.vo.LoginNameVO" >
-    	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress} where yzj_account = #{login.yzjAccount} and ip_address is null
+    	update T_LoginNameWhiteList set is_inner_net = #{login.isInnerNet},ip_address=#{login.ipAddress},state = 1 where yzj_account = #{login.yzjAccount} and ip_address is null
     </update>
     
     <update id="stateChange" parameterType="previewoffice.vo.LoginNameVO" >

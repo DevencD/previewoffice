@@ -1,5 +1,8 @@
 package previewoffice.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoginNameVO
 {
     
@@ -73,5 +76,30 @@ public class LoginNameVO
     {
         this.state = state;
     }
-
+    
+    public static void main(String[] args)
+    {
+        List<String> a = new ArrayList<String>();
+        
+        for(int i = 1;i<35;i++) {
+            a.add("" + i);
+        }
+        System.out.println(a);
+        double perSize = 10;
+        double totalSize = a.size();
+        int pages = (int) Math.ceil(totalSize / perSize);
+        List<String> tempSqlArr = new ArrayList<String>();
+        StringBuffer sqlUnion = new StringBuffer();
+        for(int i =0;i<pages;i++){
+            int fromIndex = i * (int)perSize;
+            int toIndex = (i+1) * (int)perSize;
+            toIndex = toIndex > (int)totalSize ? (int)totalSize : toIndex;
+            tempSqlArr = a.subList(fromIndex, toIndex);
+            for(String builder : tempSqlArr){
+                sqlUnion.append(" union ").append(builder.toString());
+            }
+            System.out.println(sqlUnion);
+            sqlUnion.setLength(0);;
+        }
+    }
 }
